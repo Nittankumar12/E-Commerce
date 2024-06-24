@@ -19,13 +19,14 @@ public class OrderController {
     public OrderResponseDto createOrder(@RequestBody OrderDto orderDto) {
         System.out.println("in order creation endpoint");
         OrderResponseDto orderResponseDto = orderService.createOrder(orderDto);
+        System.out.println("got response");
         return orderResponseDto;
     }
 
     @GetMapping("get/{id}")
-    public OrderResponseDto getOrder(@PathVariable Long id) {
+    public ResponseEntity<OrderResponseDto> getOrder(@PathVariable Long id) {
         OrderResponseDto orderResponseDto = orderService.getOrderById(id);
-        return orderResponseDto;
+        return new ResponseEntity<>(orderResponseDto, HttpStatus.OK);
     }
 
     @PutMapping("updateStatus/{id}")

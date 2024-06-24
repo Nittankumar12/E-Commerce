@@ -7,8 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface
-ProductDao extends JpaRepository<Product, Long> {
+public interface  ProductDao extends JpaRepository<Product, Long> {
     boolean existsByProductName(String name);
     List<Product> findByIdIn(List<Long> ids);
 }

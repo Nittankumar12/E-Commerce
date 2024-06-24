@@ -1,9 +1,7 @@
 package com.nittan.e_commerce.controller;
 
-import com.nittan.e_commerce.dao.ProductDao;
 import com.nittan.e_commerce.entity.Product;
 import com.nittan.e_commerce.service.ProductService;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
@@ -50,16 +48,13 @@ public class ProductController {
     }
 
     @PostMapping("getProductsForOrder")
-    public List<Product> getProductsForOrder(@RequestBody List<Long> productIds){
+    public ResponseEntity<List<Product>> getProductsForOrder(@RequestBody List<Long> productIds){
     System.out.println(environment.getProperty("local.server.port"));
     List<Product> products = productService.getProductsForOrder(productIds);
+    if(products == null) return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
     System.out.println(products.get(1).getProductName());
     System.out.println("returning products");
-    return products;
+    return new ResponseEntity<>(products,HttpStatus.OK);
     }
 
-//    @PostMapping("getProductsFromIds")
-//    public ResponseEntity<List<Product>> getProductsFromIds(@RequestBody List<Long> productIds){
-//        return new ResponseEntity<>(productService.getProductsFromIds(productIds), HttpStatus.OK);
-//    }
 }

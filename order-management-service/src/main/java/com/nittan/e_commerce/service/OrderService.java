@@ -7,6 +7,8 @@ import com.nittan.e_commerce.dto.OrderResponseDto;
 import com.nittan.e_commerce.entity.Order;
 import com.nittan.e_commerce.entity.Product;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,25 +24,32 @@ public class OrderService {
     private ProductClient productClient;
 
     public OrderResponseDto createOrder(OrderDto orderDto) {
-        System.out.println("going to get products");
-        List<Product> products = productClient.getProductsForOrder(orderDto.getProductIds());
-        System.out.println("I am order, i got products");
-        Order order = new Order();
-        order.setUserId(orderDto.getUserId());
-        order.setProductIds(orderDto.getProductIds());
-        order.setStatus("CREATED");
-        System.out.println("saving to repo");
-        orderDao.save(order);
-        System.out.println("setting responsedto of order");
-        OrderResponseDto orderResponseDto = new OrderResponseDto();
-        orderResponseDto.setOrderId(order.getId());
-        orderResponseDto.setUserId(order.getUserId());
-        orderResponseDto.setStatus(order.getStatus());
-        orderResponseDto.setCreatedAt(order.getCreatedAt());
-        orderResponseDto.setLastModified(order.getLastModified());
-        orderResponseDto.setProducts(products);
-        System.out.println("returning responsedto of order");
-        return orderResponseDto;
+        System.out.println("going for products");
+        ResponseEntity<List<Product>> products = productClient.getProductsForOrder(orderDto.getProductIds());
+        System.out.println("got order");
+        if(products.getStatusCode() == HttpStatus.OK) {
+            System.out.println("I am order, i got products");
+            Order order = new Order();
+            order.setUserId(orderDto.getUserId());
+            order.setProductIds(orderDto.getProductIds());
+            order.setStatus("CREATED");
+            System.out.println("saving to repo");
+            orderDao.save(order);
+            System.out.println("setting responsedto of order");
+            OrderResponseDto orderResponseDto = new OrderResponseDto();
+            orderResponseDto.setOrderId(order.getId());
+            orderResponseDto.setUserId(order.getUserId());
+            orderResponseDto.setStatus(order.getStatus());
+            orderResponseDto.setCreatedAt(order.getCreatedAt());
+            orderResponseDto.setLastModified(order.getLastModified());
+            orderResponseDto.setProducts(products.getBody());
+            System.out.println("returning responsedto of order");
+            return orderResponseDto;
+        }
+        else{
+            System.out.println("not found");
+        }
+        return null;
     }
 
     public OrderResponseDto getOrderById(Long id) {
@@ -49,17 +58,22 @@ public class OrderService {
             return null;
         }
         Order order = orderOptional.get();
-
-        List<Product> products = productClient.getProductsForOrder(order.getProductIds());
-
-        OrderResponseDto orderResponseDto = new OrderResponseDto();
-        orderResponseDto.setOrderId(order.getId());
-        orderResponseDto.setUserId(order.getUserId());
-        orderResponseDto.setStatus(order.getStatus());
-        orderResponseDto.setCreatedAt(order.getCreatedAt());
-        orderResponseDto.setLastModified(order.getLastModified());
-        orderResponseDto.setProducts(products);
-        return orderResponseDto;
+        System.out.println("going for order products");
+        ResponseEntity<List<Product>> products = productClient.getProductsForOrder(order.getProductIds());
+        System.out.println("products fetched");
+        if(products.getStatusCode()== HttpStatus.OK) {
+            OrderResponseDto orderResponseDto = new OrderResponseDto();
+            orderResponseDto.setOrderId(order.getId());
+            orderResponseDto.setUserId(order.getUserId());
+            orderResponseDto.setStatus(order.getStatus());
+            orderResponseDto.setCreatedAt(order.getCreatedAt());
+            orderResponseDto.setLastModified(order.getLastModified());
+            orderResponseDto.setProducts(products.getBody());
+            return orderResponseDto;
+        }else{
+            System.out.println("not found");
+        }
+        return null;
     }
 
     public String updateOrderStatus(Long orderId, String status) {

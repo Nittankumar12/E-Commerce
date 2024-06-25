@@ -1,11 +1,17 @@
 package com.nittan.e_commerce.entity;
-//
-//import lombok.Data;
-//
-//@Data
+
 public class Product {
+    private Long id;
     private String productName;
     private Integer productPrice;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getProductName() {
         return productName;

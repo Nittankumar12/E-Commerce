@@ -1,14 +1,10 @@
 package com.nittan.e_commerce.dto;
 
 import com.nittan.e_commerce.entity.Product;
-//import lombok.Data;
-//import lombok.Getter;
-//import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-//@Setter
 public class OrderResponseDto {
     private Long orderId;
     private Integer userId;

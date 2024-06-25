@@ -23,7 +23,7 @@ public class OrderService {
     @Autowired
     private ProductClient productClient;
 
-    public OrderResponseDto createOrder(OrderDto orderDto) {
+    public Order createOrder(OrderDto orderDto) {
         System.out.println("going for products");
         ResponseEntity<List<Product>> products = productClient.getProductsForOrder(orderDto.getProductIds());
         System.out.println("got order");
@@ -35,16 +35,17 @@ public class OrderService {
             order.setStatus("CREATED");
             System.out.println("saving to repo");
             orderDao.save(order);
-            System.out.println("setting responsedto of order");
-            OrderResponseDto orderResponseDto = new OrderResponseDto();
-            orderResponseDto.setOrderId(order.getId());
-            orderResponseDto.setUserId(order.getUserId());
-            orderResponseDto.setStatus(order.getStatus());
-            orderResponseDto.setCreatedAt(order.getCreatedAt());
-            orderResponseDto.setLastModified(order.getLastModified());
-            orderResponseDto.setProducts(products.getBody());
-            System.out.println("returning responsedto of order");
-            return orderResponseDto;
+            return order;
+//            System.out.println("setting responsedto of order");
+//            OrderResponseDto orderResponseDto = new OrderResponseDto();
+//            orderResponseDto.setOrderId(order.getId());
+//            orderResponseDto.setUserId(order.getUserId());
+//            orderResponseDto.setStatus(order.getStatus());
+//            orderResponseDto.setCreatedAt(order.getCreatedAt());
+//            orderResponseDto.setLastModified(order.getLastModified());
+//            orderResponseDto.setProducts(products.getBody());
+//            System.out.println("returning responsedto of order");
+//            return orderResponseDto;
         }
         else{
             System.out.println("not found");

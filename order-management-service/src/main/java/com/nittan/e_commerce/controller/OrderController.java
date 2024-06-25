@@ -2,6 +2,7 @@ package com.nittan.e_commerce.controller;
 
 import com.nittan.e_commerce.dto.OrderDto;
 import com.nittan.e_commerce.dto.OrderResponseDto;
+import com.nittan.e_commerce.entity.Order;
 import com.nittan.e_commerce.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,9 +17,9 @@ public class OrderController {
     private OrderService orderService;
 
     @PostMapping("create")
-    public OrderResponseDto createOrder(@RequestBody OrderDto orderDto) {
+    public Order createOrder(@RequestBody OrderDto orderDto) {
         System.out.println("in order creation endpoint");
-        OrderResponseDto orderResponseDto = orderService.createOrder(orderDto);
+        Order orderResponseDto = orderService.createOrder(orderDto);
         System.out.println("got response");
         return orderResponseDto;
     }

@@ -1,6 +1,7 @@
 spring:
   application:
-    name:ORDER-MANAGEMENT-SERVICE
+    name: ORDER-MANAGEMENT-SERVICE
+
 server:
   port: 8090
 eureka:

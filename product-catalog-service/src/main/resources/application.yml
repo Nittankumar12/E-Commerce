@@ -1,6 +1,6 @@
 spring:
   application:
-    name:PRODUCT-CATALOG-SERVICE
+    name: PRODUCT-CATALOG-SERVICE
 server:
   port: 8081
 eureka:

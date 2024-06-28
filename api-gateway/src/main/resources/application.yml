@@ -5,7 +5,6 @@ spring:
     gateway:
       discovery:
         locator:
-          enabled: true
           lower-case-service-id: true
       routes:
         - id: user-authentication-service
@@ -15,11 +14,15 @@ spring:
         - id: order-management-service
           uri: lb://ORDER-MANAGEMENT-SERVICE
           predicates:
-            - Path=/order/**
+            - Path= /order/**
+          filters:
+            - JwtAuthFilter
         - id: product-catalog-service
           uri: lb://PRODUCT-CATALOG-SERVICE
           predicates:
             - Path=/product/**
+          filters:
+            - JwtAuthFilter
 eureka:
   client:
     service-url:

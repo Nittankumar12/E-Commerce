@@ -1,0 +1,26 @@
+spring:
+ cloud:
+   gateway:
+     routes:
+       - id: order-management-service
+         uri: lb://ORDER-MANAGEMENT-SERVICE
+         predicates:
+           - Path=/order/**
+
+
+
+       - id: product-catalog-service
+         uri: lb://PRODUCT-CATALOG-SERVICE
+         predicates:
+           - Path=/product/**
+
+
+       - id: user-authentication-service
+         uri: lb://USER-AUTHENTICATION-SERVICE
+         predicates:
+           - Path=/auth/**
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka

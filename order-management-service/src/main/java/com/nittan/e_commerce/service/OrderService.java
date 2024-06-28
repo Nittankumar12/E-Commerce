@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,7 +24,7 @@ public class OrderService {
     @Autowired
     private ProductClient productClient;
 
-    public Order createOrder(OrderDto orderDto) {
+    public OrderResponseDto createOrder(OrderDto orderDto) {
         System.out.println("going for products");
         ResponseEntity<List<Product>> products = productClient.getProductsForOrder(orderDto.getProductIds());
         System.out.println("got order");
@@ -35,17 +36,16 @@ public class OrderService {
             order.setStatus("CREATED");
             System.out.println("saving to repo");
             orderDao.save(order);
-            return order;
-//            System.out.println("setting responsedto of order");
-//            OrderResponseDto orderResponseDto = new OrderResponseDto();
-//            orderResponseDto.setOrderId(order.getId());
-//            orderResponseDto.setUserId(order.getUserId());
-//            orderResponseDto.setStatus(order.getStatus());
-//            orderResponseDto.setCreatedAt(order.getCreatedAt());
-//            orderResponseDto.setLastModified(order.getLastModified());
-//            orderResponseDto.setProducts(products.getBody());
-//            System.out.println("returning responsedto of order");
-//            return orderResponseDto;
+            System.out.println("setting responsedto of order");
+            OrderResponseDto orderResponseDto = new OrderResponseDto();
+            orderResponseDto.setOrderId(order.getId());
+            orderResponseDto.setUserId(order.getUserId());
+            orderResponseDto.setStatus(order.getStatus());
+            orderResponseDto.setCreatedAt(order.getCreatedAt());
+            orderResponseDto.setLastModified(order.getLastModified());
+            orderResponseDto.setProducts(products.getBody());
+            System.out.println("returning responsedto of order");
+            return orderResponseDto;
         }
         else{
             System.out.println("not found");
@@ -94,5 +94,24 @@ public class OrderService {
         }
         orderDao.deleteById(orderId);
         return "Order deleted successfully";
+    }
+
+    public List<OrderResponseDto> getAllOrders() {
+        List<Order> orders = orderDao.findAll();
+        List<OrderResponseDto> orderResponseList = new ArrayList<>();
+        for(Order order: orders){
+            ResponseEntity<List<Product>> products = productClient.getProductsForOrder(order.getProductIds());
+            if(products.getStatusCode() == HttpStatus.OK){
+            OrderResponseDto orderResponseDto = new OrderResponseDto();
+            orderResponseDto.setProducts(products.getBody());
+            orderResponseDto.setUserId(order.getUserId());
+            orderResponseDto.setStatus(order.getStatus());
+            orderResponseDto.setCreatedAt(order.getCreatedAt());
+            orderResponseDto.setLastModified(order.getLastModified());
+            orderResponseDto.setOrderId(order.getId());
+            orderResponseList.add(orderResponseDto);
+            }
+        }
+        return orderResponseList;
     }
 }

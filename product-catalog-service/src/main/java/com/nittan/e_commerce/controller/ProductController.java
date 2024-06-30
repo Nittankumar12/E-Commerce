@@ -52,7 +52,6 @@ public class ProductController {
     System.out.println(environment.getProperty("local.server.port"));
     List<Product> products = productService.getProductsForOrder(productIds);
     if(products == null) return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
-    System.out.println(products.get(1).getProductName());
     System.out.println("returning products");
     return new ResponseEntity<>(products,HttpStatus.OK);
     }

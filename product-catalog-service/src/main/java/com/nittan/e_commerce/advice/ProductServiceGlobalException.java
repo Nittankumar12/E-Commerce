@@ -4,6 +4,7 @@ import com.nittan.e_commerce.entity.CustomeErrorResponse;
 import com.nittan.e_commerce.entity.GlobalErrorCode;
 import com.nittan.e_commerce.exception.GenericeException;
 import com.nittan.e_commerce.exception.ProductNotFoundException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -14,7 +15,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class ProductServiceGlobalException {
 
     @ExceptionHandler(ProductNotFoundException.class)
-    public ResponseEntity<?> handleOrderNotFoundException(ProductNotFoundException exception){
+    public ResponseEntity<?> handleProductNotFoundException(ProductNotFoundException exception){
         CustomeErrorResponse errorResponse = CustomeErrorResponse.builder()
                 .httpStatus(HttpStatus.INTERNAL_SERVER_ERROR)
                 .errorCode(GlobalErrorCode.ERROR_ORDER_NOT_FOUND)

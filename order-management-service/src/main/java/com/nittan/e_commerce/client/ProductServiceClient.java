@@ -16,6 +16,7 @@ import java.util.List;
 @Component
 @Slf4j
 public class ProductServiceClient {
+
     @Autowired
     private RestTemplate template;
 

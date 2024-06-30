@@ -2,6 +2,8 @@ package com.nittan.e_commerce.service;
 
 import com.nittan.e_commerce.dao.ProductDao;
 import com.nittan.e_commerce.entity.Product;
+import com.nittan.e_commerce.exception.GenericeException;
+import com.nittan.e_commerce.exception.ProductNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,16 +17,20 @@ public class ProductService {
     private ProductDao productDao;
 
     public List<Product> getAllProducts() {
-        return productDao.findAll();
+        List<Product> products =  productDao.findAll();
+        if(products.isEmpty()) throw new ProductNotFoundException("No products found");
+        return products;
     }
 
     public Product getProductById(Long id) {
-        return productDao.findById(id).orElse(null);
+        Product product =  productDao.findById(id).get();
+        if(product == null) throw new ProductNotFoundException("No product found");
+        return product;
     }
 
     public String addProduct(Product product) {
         if (productDao.existsByProductName(product.getProductName())) {
-            return "Product already exists with the same name";
+            throw new GenericeException("Product already present with same name");
         }
         productDao.save(product);
         return "Product added successfully";
@@ -33,6 +39,7 @@ public class ProductService {
     public Product updateProduct(Product product) {
         Optional<Product> optionalProduct = productDao.findById(product.getId());
         Product updatedProduct = optionalProduct.get();
+        if(updatedProduct == null) throw new ProductNotFoundException("No product found with this id");
         updatedProduct.setProductName(product.getProductName());
         updatedProduct.setProductPrice(product.getProductPrice());
         productDao.save(updatedProduct);
@@ -41,14 +48,16 @@ public class ProductService {
 
     public String deleteProduct(Long id) {
         if (!productDao.existsById(id)) {
-            return "Product not exists";
+           throw new ProductNotFoundException("Product already not found");
         }
         productDao.deleteById(id);
         return "Product deleted successfully";
     }
 
     public List<Product> getProductsForOrder(List<Long> productIds) {
-        return productDao.findByIdIn(productIds);
+        List<Product> products =  productDao.findByIdIn(productIds);
+        if(products.isEmpty()) throw new ProductNotFoundException("Products not found");
+        return products;
     }
 
 }

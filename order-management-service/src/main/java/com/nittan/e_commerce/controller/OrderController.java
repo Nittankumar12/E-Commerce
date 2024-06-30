@@ -3,6 +3,7 @@ package com.nittan.e_commerce.controller;
 import com.nittan.e_commerce.dto.OrderDto;
 import com.nittan.e_commerce.dto.OrderResponseDto;
 import com.nittan.e_commerce.entity.Order;
+import com.nittan.e_commerce.exception.OrderNotFoundException;
 import com.nittan.e_commerce.service.OrderService;
 import org.apache.http.protocol.ResponseServer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,7 @@ public class OrderController {
     @GetMapping("get/{id}")
     public ResponseEntity<OrderResponseDto> getOrder(@PathVariable Long id) {
         OrderResponseDto order = orderService.getOrderById(id);
+        if(order == null) throw new OrderNotFoundException("Order not found for this order id and it got handled");
         return new ResponseEntity<>(order, HttpStatus.OK);
     }
 

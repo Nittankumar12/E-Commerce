@@ -6,6 +6,7 @@ import com.nittan.e_commerce.dto.OrderDto;
 import com.nittan.e_commerce.dto.OrderResponseDto;
 import com.nittan.e_commerce.entity.Order;
 import com.nittan.e_commerce.entity.Product;
+import com.nittan.e_commerce.exception.OrderNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -73,14 +74,14 @@ public class OrderService {
             return orderResponseDto;
         }else{
             System.out.println("not found");
+            throw new OrderNotFoundException("Order not found with this id");
         }
-        return null;
     }
 
     public String updateOrderStatus(Long orderId, String status) {
         Optional<Order> orderOptional = orderDao.findById(orderId);
         if (orderOptional.isEmpty()) {
-            return "Order not found";
+            throw new OrderNotFoundException("order not found with this id");
         }
         Order order = orderOptional.get();
         order.setStatus(status);
@@ -90,7 +91,7 @@ public class OrderService {
 
     public String deleteOrder(Long orderId) {
         if (!orderDao.existsById(orderId)) {
-            return "Order not exists";
+            throw new OrderNotFoundException("order not found with this id");
         }
         orderDao.deleteById(orderId);
         return "Order deleted successfully";
@@ -112,6 +113,8 @@ public class OrderService {
             orderResponseList.add(orderResponseDto);
             }
         }
-        return orderResponseList;
+        if(orderResponseList.isEmpty())
+             throw new OrderNotFoundException("no orders found");
+         return orderResponseList;
     }
 }

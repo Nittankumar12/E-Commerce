@@ -5,6 +5,7 @@ import com.nittan.e_commerce.dto.CustomeErrorResponse;
 import com.nittan.e_commerce.dto.GlobalErrorCode;
 import com.nittan.e_commerce.exception.GenericeException;
 import com.nittan.e_commerce.exception.OrderNotFoundException;
+import com.nittan.e_commerce.exception.ProductServiceException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,6 +37,18 @@ public class OrderServiceGlobalException {
                 .build();
         log.error("OrderServiceGlobalExceptionHandler::Generic exception caught {}", exception.getMessage());
         return ResponseEntity.internalServerError().body(errorResponse);
-
     }
+
+     @ExceptionHandler(ProductServiceException.class)
+    public ResponseEntity<?> handleProductsNotFoundExcepiton(Exception exception){
+        CustomeErrorResponse errorResponse = CustomeErrorResponse.builder()
+                .httpStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+                .errorCode(GlobalErrorCode.PRODUCTS_NOT_FOUND)
+                .errorMessage(exception.getMessage())
+                .build();
+        log.error("ProductServiceGlobalExceptionHandler::Product service exception caught {}", exception.getMessage());
+        return ResponseEntity.internalServerError().body(errorResponse);
+    }
+
+
 }

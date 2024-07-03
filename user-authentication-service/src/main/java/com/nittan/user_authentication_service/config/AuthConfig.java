@@ -1,6 +1,5 @@
 package com.nittan.user_authentication_service.config;
 
-
 import com.nittan.user_authentication_service.service.MyUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

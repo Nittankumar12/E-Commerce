@@ -23,9 +23,12 @@ public class ProductService {
     }
 
     public Product getProductById(Long id) {
-        Product product =  productDao.findById(id).get();
-        if(product == null) throw new ProductNotFoundException("No product found");
-        return product;
+        try{
+            return productDao.findById(id).get();
+        }
+        catch(Exception exception){
+            throw new ProductNotFoundException("Product not found with this id");
+        }
     }
 
     public String addProduct(Product product) {
@@ -63,6 +66,7 @@ public class ProductService {
             throw new ProductNotFoundException("product not found from the given list or wrong product ids");
         }
         if(products.isEmpty()) throw new ProductNotFoundException("No Products not found");
+        if(products.size() < productIds.size()) throw new ProductNotFoundException(" Not all products found");
         return products;
     }
 

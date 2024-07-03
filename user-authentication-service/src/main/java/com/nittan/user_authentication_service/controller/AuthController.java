@@ -13,8 +13,6 @@ public class AuthController {
     @Autowired
     AuthService authService;
 
-
-
     @PostMapping("/register")
     public String addUser(@RequestBody UserCredential user){
         return authService.saveUser(user);

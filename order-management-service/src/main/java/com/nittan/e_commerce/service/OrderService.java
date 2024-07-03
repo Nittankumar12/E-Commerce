@@ -31,8 +31,14 @@ public class OrderService {
 
     public OrderResponseDto createOrder(OrderDto orderDto) {
         System.out.println("going for products");
+        ResponseEntity<List<Product>> products = null;
         try {
-            ResponseEntity<List<Product>> products = productClient.getProductsForOrder(orderDto.getProductIds());
+            products = productClient.getProductsForOrder(orderDto.getProductIds());
+        } catch (Exception errorException) {
+            System.out.println("got error");
+             log.error("ProductServiceClient::Getting products caught the HttpServer server error {}", errorException.toString());
+            throw new ProductServiceException("Products not found");
+        }
             System.out.println("got order");
             if (products.getStatusCode() == HttpStatus.OK) {
                 System.out.println("I am order, i got products");
@@ -57,12 +63,8 @@ public class OrderService {
                 }
                 return orderResponseDto;
             }
-        } catch (Exception errorException) {
-             log.error("ProductServiceClient::Getting products caught the HttpServer server error {}", errorException.toString());
-            throw new ProductServiceException(errorException.toString());
-        }
-        System.out.println("not found");
-        throw new ProductServiceException("Error while getting products from product service");
+            System.out.println("not found");
+            throw new ProductServiceException("Error while getting products from product service");
         }
 
 

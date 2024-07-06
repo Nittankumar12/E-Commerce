@@ -9,6 +9,7 @@ import com.nittan.e_commerce.entity.Product;
 import com.nittan.e_commerce.exception.GenericeException;
 import com.nittan.e_commerce.exception.OrderNotFoundException;
 import com.nittan.e_commerce.exception.ProductServiceException;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,6 +29,7 @@ public class OrderService {
 
     @Autowired
     private ProductClient productClient;
+
 
     public OrderResponseDto createOrder(OrderDto orderDto) {
         System.out.println("going for products");
@@ -130,5 +132,14 @@ public class OrderService {
         if(orderResponseList.isEmpty())
              throw new OrderNotFoundException("no orders found");
          return orderResponseList;
+    }
+
+    public List<Product> getAllProducts() {
+        try {
+            return productClient.getAllProducts();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        }
     }
 }

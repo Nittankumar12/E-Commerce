@@ -78,25 +78,7 @@
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-actuator -->
-<dependency>
-    <groupId>org.springframework.boot</groupId>
-    <artifactId>spring-boot-starter-actuator</artifactId>
-    <version>3.3.0</version>
-</dependency>
-<!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-aop -->
-<dependency>
-    <groupId>org.springframework.boot</groupId>
-    <artifactId>spring-boot-starter-aop</artifactId>
-    <version>3.3.0</version>
-</dependency>
-<!-- https://mvnrepository.com/artifact/io.github.resilience4j/resilience4j-retry -->
-<!-- https://mvnrepository.com/artifact/io.github.resilience4j/resilience4j-circuitbreaker -->
-<dependency>
-    <groupId>io.github.resilience4j</groupId>
-    <artifactId>resilience4j-circuitbreaker</artifactId>
-    <version>1.7.1</version>
-</dependency>
+
 
 	</dependencies>
 

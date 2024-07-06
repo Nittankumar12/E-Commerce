@@ -1,5 +1,9 @@
 package com.nittan.e_commerce.entity;
 
+
+import lombok.AllArgsConstructor;
+
+@AllArgsConstructor
 public class Product {
     private Long id;
     private String productName;

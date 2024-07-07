@@ -1,6 +1,8 @@
 spring:
   application:
     name: ORDER-MANAGEMENT-SERVICE
+  zipkin:
+    base-url: http://localhost:9411/
 
 server:
   port: 8090
@@ -11,6 +13,9 @@ eureka:
       defaultZone: http://localhost:8761/eureka/
 
 management:
+  tracing:
+    sampling:
+      probability: 1.0
   health:
     circuitbreakers:
       enabled: true

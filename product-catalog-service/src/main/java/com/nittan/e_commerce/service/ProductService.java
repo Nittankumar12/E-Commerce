@@ -4,6 +4,8 @@ import com.nittan.e_commerce.dao.ProductDao;
 import com.nittan.e_commerce.entity.Product;
 import com.nittan.e_commerce.exception.GenericeException;
 import com.nittan.e_commerce.exception.ProductNotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,9 +18,15 @@ public class ProductService {
     @Autowired
     private ProductDao productDao;
 
-    public List<Product> getAllProducts() {
+    Logger logger= LoggerFactory.getLogger(ProductService.class);
+
+    public List<Product> getAllProducts(){
         List<Product> products =  productDao.findAll();
-        if(products.isEmpty()) throw new ProductNotFoundException("No products found");
+        if(products.isEmpty()){
+            logger.warn("No products found");
+            throw new ProductNotFoundException("No products found");
+        }
+        logger.info("Retrieved {} products " + products.size());
         return products;
     }
 
@@ -65,8 +73,12 @@ public class ProductService {
         catch(Exception ex){
             throw new ProductNotFoundException("product not found from the given list or wrong product ids");
         }
-        if(products.isEmpty()) throw new ProductNotFoundException("No Products not found");
+        if(products.isEmpty()){
+            logger.warn("Not Products found");
+            throw new ProductNotFoundException("No Products not found");
+        }
         if(products.size() < productIds.size()) throw new ProductNotFoundException(" Not all products found");
+        logger.info("Retrieved {} products " + products.size());
         return products;
     }
 

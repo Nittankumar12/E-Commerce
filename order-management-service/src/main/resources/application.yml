@@ -47,3 +47,7 @@ resilience4j:
       orderService:
         maxRetryAttempts: 3
         waitDuration: 2s
+
+logging:
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%X{traceId},%X{spanId}] %-5level %logger{36} - %msg%n"

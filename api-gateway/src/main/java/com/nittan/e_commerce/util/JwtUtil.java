@@ -28,5 +28,4 @@ public class JwtUtil {
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-
 }

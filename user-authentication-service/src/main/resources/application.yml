@@ -1,6 +1,12 @@
 spring:
   application:
     name: USER-AUTHENTICATION-SERVICE
+  zipkin:
+    base-url: http://localhost:9411
+management:
+  tracing:
+    sampling:
+      probability: 1.0
 eureka:
   client:
     service-url:

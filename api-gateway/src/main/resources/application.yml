@@ -1,6 +1,8 @@
 spring:
   application:
     name: API-GATEWAY
+  zipkin:
+    base-url: http://localhost:9411/
   cloud:
     gateway:
       discovery:
@@ -23,6 +25,10 @@ spring:
             - Path=/product/**
           filters:
             - JwtAuthFilter
+management:
+  tracing:
+    sampling:
+      probability: 1.0
 eureka:
   client:
     service-url:

@@ -11,6 +11,8 @@ import com.nittan.e_commerce.exception.OrderNotFoundException;
 import com.nittan.e_commerce.exception.ProductServiceException;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,9 +32,11 @@ public class OrderService {
     @Autowired
     private ProductClient productClient;
 
+    Logger logger = LoggerFactory.getLogger(OrderService.class);
+
 
     public OrderResponseDto createOrder(OrderDto orderDto) {
-        System.out.println("going for products");
+
         ResponseEntity<List<Product>> products = null;
         try {
             products = productClient.getProductsForOrder(orderDto.getProductIds());
@@ -50,6 +54,7 @@ public class OrderService {
                 order.setStatus("CREATED");
                 System.out.println("saving to repo");
                 orderDao.save(order);
+                logger.info("Creating order and got products from product-service {}" + products.getBody().size());
                 System.out.println("setting responsedto of order");
                 OrderResponseDto orderResponseDto = new OrderResponseDto();
                 orderResponseDto.setOrderId(order.getId());
@@ -87,6 +92,7 @@ public class OrderService {
             orderResponseDto.setCreatedAt(order.getCreatedAt());
             orderResponseDto.setLastModified(order.getLastModified());
             orderResponseDto.setProducts(products.getBody());
+            logger.info("got products {}" + products.getBody().size());
             return orderResponseDto;
         }else{
             System.out.println("not found");
@@ -131,15 +137,19 @@ public class OrderService {
         }
         if(orderResponseList.isEmpty())
              throw new OrderNotFoundException("no orders found");
-         return orderResponseList;
+        logger.info("Got {} orders" + orderResponseList.size());
+        return orderResponseList;
     }
 
     public List<Product> getAllProducts() {
+        List<Product> products = null;
         try {
-            return productClient.getAllProducts();
+            products =  productClient.getAllProducts();
         } catch (Exception e) {
             e.printStackTrace();
             throw e;
         }
+        logger.info("got {} products" + products.size());
+        return products;
     }
 }

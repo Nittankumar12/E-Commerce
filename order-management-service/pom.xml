@@ -120,6 +120,7 @@
     </dependencies>
 </dependencyManagement>
     <build>
+        <finalName>order-service</finalName>
         <plugins>
             <!-- Spring Boot Maven Plugin -->
             <plugin>

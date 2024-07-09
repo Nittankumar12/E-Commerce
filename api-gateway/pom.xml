@@ -103,6 +103,7 @@
 	</dependencyManagement>
 
 	<build>
+		<finalName>api-gateway</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>

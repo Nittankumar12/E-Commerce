@@ -35,6 +35,7 @@ public class OrderService {
     Logger logger = LoggerFactory.getLogger(OrderService.class);
 
 
+    // create order and also fetching order from the other service
     public OrderResponseDto createOrder(OrderDto orderDto) {
 
         ResponseEntity<List<Product>> products = null;
@@ -75,6 +76,7 @@ public class OrderService {
         }
 
 
+        // get order by id
     public OrderResponseDto getOrderById(Long id) {
         Optional<Order> orderOptional = orderDao.findById(id);
         if (orderOptional.isEmpty()) {
@@ -92,6 +94,7 @@ public class OrderService {
             orderResponseDto.setCreatedAt(order.getCreatedAt());
             orderResponseDto.setLastModified(order.getLastModified());
             orderResponseDto.setProducts(products.getBody());
+            // statement to show number of products got
             logger.info("got products {}" + products.getBody().size());
             return orderResponseDto;
         }else{
@@ -100,6 +103,7 @@ public class OrderService {
         }
     }
 
+    // updating order status
     public String updateOrderStatus(Long orderId, String status) {
         Optional<Order> orderOptional = orderDao.findById(orderId);
         if (orderOptional.isEmpty()) {
@@ -119,10 +123,13 @@ public class OrderService {
         return "Order deleted successfully";
     }
 
+    // getting all orders and returning through the order response
     public List<OrderResponseDto> getAllOrders() {
         List<Order> orders = orderDao.findAll();
         List<OrderResponseDto> orderResponseList = new ArrayList<>();
         for(Order order: orders){
+
+            // fetching product from product service
             ResponseEntity<List<Product>> products = productClient.getProductsForOrder(order.getProductIds());
             if(products.getStatusCode() == HttpStatus.OK){
             OrderResponseDto orderResponseDto = new OrderResponseDto();
@@ -137,10 +144,12 @@ public class OrderService {
         }
         if(orderResponseList.isEmpty())
              throw new OrderNotFoundException("no orders found");
+        // logger to  show orders
         logger.info("Got {} orders" + orderResponseList.size());
         return orderResponseList;
     }
 
+    // get all products available through product client
     public List<Product> getAllProducts() {
         List<Product> products = null;
         try {
@@ -149,6 +158,7 @@ public class OrderService {
             e.printStackTrace();
             throw e;
         }
+        // logger statement to check how many products got
         logger.info("got {} products" + products.size());
         return products;
     }

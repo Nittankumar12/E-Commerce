@@ -32,9 +32,11 @@ import java.util.List;
 @FeignClient(name = "PRODUCT-CATALOG-SERVICE")
 public interface ProductClient {
 
+    // get products for creation of order from the product service
     @PostMapping("/product/getProductsForOrder")
     ResponseEntity<List<Product>> getProductsForOrder(@RequestBody List<Long> productIds);
 
+    // get available products
     @GetMapping("/product/products")
     List<Product> getAllProducts();
 }

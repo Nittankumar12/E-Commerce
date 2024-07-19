@@ -22,33 +22,41 @@ public class ProductController {
     @Autowired
     Environment environment;
 
+    // get all products
     @GetMapping("products")
     public List<Product> getAllProducts() {
         return productService.getAllProducts();
     }
 
+    // get product by id
     @GetMapping("products/{id}")
     public Product getProductById(@PathVariable Long id){
         Product product = productService.getProductById(id);
         return product;
     }
 
+    // add new product
     @PostMapping("add")
     public String addProduct(@RequestBody Product product){
         return productService.addProduct(product);
     }
 
+
+    // update product
     @PutMapping("update")
     public Product updateProduct(@RequestBody Product product){
         return productService.updateProduct(product);
     }
 
+
+    // delete product
     @DeleteMapping("delete/{id}")
     public String deleteProduct(@PathVariable Long id){
         productService.deleteProduct(id);
         return "deleted";
     }
 
+    // get products for the order
     @PostMapping("getProductsForOrder")
     public ResponseEntity<List<Product>> getProductsForOrder(@RequestBody List<Long> productIds){
     System.out.println(environment.getProperty("local.server.port"));

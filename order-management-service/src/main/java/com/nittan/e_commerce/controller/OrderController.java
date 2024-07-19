@@ -29,6 +29,7 @@ public class OrderController {
 
     public static final String ORDER_SERVICE = "orderService";
 
+    // create order
     @PostMapping("create")
     public OrderResponseDto createOrder(@RequestBody OrderDto orderDto) {
         System.out.println("in order creation endpoint");
@@ -37,6 +38,7 @@ public class OrderController {
         return order;
     }
 
+    // get order by id
     @GetMapping("get/{id}")
     public ResponseEntity<OrderResponseDto> getOrder(@PathVariable Long id) {
         OrderResponseDto order = orderService.getOrderById(id);
@@ -44,31 +46,40 @@ public class OrderController {
         return new ResponseEntity<>(order, HttpStatus.OK);
     }
 
+
+    // update order status
     @PutMapping("updateStatus/{id}")
     public String updateOrderStatus(@PathVariable Long id, @RequestParam String status) {
         String response = orderService.updateOrderStatus(id, status);
         return response;
     }
 
+
+    // delete order
     @DeleteMapping("delete/{id}")
     public String deleteOrder(@PathVariable Long id) {
         String response = orderService.deleteOrder(id);
         return response;
     }
 
+    // get all orders and their products
     @GetMapping("orders")
     public ResponseEntity<List<OrderResponseDto>> getAllOrders(){
         List<OrderResponseDto> orderResponseDtos = orderService.getAllOrders();
         return  new ResponseEntity<>(orderResponseDtos,HttpStatus.OK);
     }
 
+    // get all products available in product service
     @GetMapping("getAllProducts")
     @CircuitBreaker(name= "orderService",fallbackMethod = "getAllDemoProducts")
     @Retry(name= "orderService",fallbackMethod = "getAllDemoProducts")
+    // getting products from product service
     public List<Product> getAllProducts(){
         System.out.println("retry method called: " + attempt++ + " times " + " at " + new Date());
         return orderService.getAllProducts();
     }
+
+    // fallback method for retry and circuit breaker
       public List<Product> getAllDemoProducts(Exception exception) {
         List<Product> demoProducts = new ArrayList<>();
 

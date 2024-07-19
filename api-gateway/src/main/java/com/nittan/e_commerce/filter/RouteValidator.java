@@ -9,12 +9,14 @@ import java.util.function.Predicate;
 @Component
 public class RouteValidator {
 
+    // open end points that do not require authorization
     public static final List<String> openApiEndpoints = List.of(
             "/auth/register",
             "/auth/getToken",
             "/eureka"
     );
 
+    // check if secured
     public Predicate<ServerHttpRequest> isSecured =
             request -> openApiEndpoints
                     .stream()

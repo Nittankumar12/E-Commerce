@@ -23,16 +23,19 @@ public class JwtAuthFilter extends AbstractGatewayFilterFactory<JwtAuthFilter.Co
         super(Config.class);
     }
 
+    // gateway filter
     @Override
     public GatewayFilter apply(Config config) {
         return ((exchange,chain) -> {
 
+            // check routevalidator and do accordingly
             if(routeValidator.isSecured.test(exchange.getRequest())){
                 //header contains token or not
                 if(!exchange.getRequest().getHeaders().containsKey(HttpHeaders.AUTHORIZATION)){
                     throw new RuntimeException("missing authorization header");
                 }
                 String authHeader = exchange.getRequest().getHeaders().get(HttpHeaders.AUTHORIZATION).get(0);
+               // get header
                 if(authHeader != null && authHeader.startsWith("Bearer ")){
                     authHeader = authHeader.substring(7);
                 }

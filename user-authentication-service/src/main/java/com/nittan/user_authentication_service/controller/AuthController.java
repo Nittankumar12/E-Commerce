@@ -13,16 +13,19 @@ public class AuthController {
     @Autowired
     AuthService authService;
 
+    // register new user
     @PostMapping("/register")
     public String addUser(@RequestBody UserCredential user){
         return authService.saveUser(user);
     }
 
+    // get token through credentials
     @PostMapping("/getToken")
     public String getToken(@RequestBody UserAuthRequest user){
         return authService.generateToken(user);
     }
 
+    // validating token
     @GetMapping("/validateToken")
     public String getToken(@RequestParam("token") String token){
         authService.validateToken(token);

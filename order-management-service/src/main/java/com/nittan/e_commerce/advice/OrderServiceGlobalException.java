@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @Slf4j
 public class OrderServiceGlobalException {
 
+    // order not found exception
     @ExceptionHandler(OrderNotFoundException.class)
     public ResponseEntity<?> handleOrderNotFoundException(OrderNotFoundException exception){
         CustomeErrorResponse errorResponse = CustomeErrorResponse.builder()
@@ -28,6 +29,7 @@ public class OrderServiceGlobalException {
 
     }
 
+    // Generic  exception
     @ExceptionHandler(GenericeException.class)
     public ResponseEntity<?> handleGenericException(Exception exception){
         CustomeErrorResponse errorResponse = CustomeErrorResponse.builder()
@@ -39,6 +41,7 @@ public class OrderServiceGlobalException {
         return ResponseEntity.internalServerError().body(errorResponse);
     }
 
+    // product not found exception
      @ExceptionHandler(ProductServiceException.class)
     public ResponseEntity<?> handleProductsNotFoundExcepiton(Exception exception){
         CustomeErrorResponse errorResponse = CustomeErrorResponse.builder()

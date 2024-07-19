@@ -17,11 +17,14 @@ import java.util.Map;
 @Component
 public class JwtUtil {
 
+    // secret for generating token
     public static final String SECRET = "5367566B59703373367639792F423F4528482B4D6251655468576D5A71347437";
 
+    // validating token
     public void validateToken(final String token){
         Jwts.parserBuilder().setSigningKey(getSigninKey()).build().parseClaimsJws(token);
     }
+
 
     private Key getSigninKey() {
         byte[] keyBytes = Decoders.BASE64.decode(SECRET);

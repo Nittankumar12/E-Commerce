@@ -8,6 +8,7 @@ import java.util.List;
 
 @Repository
 public interface  ProductDao extends JpaRepository<Product, Long> {
+    // check product if already exists by name
     boolean existsByProductName(String name);
     List<Product> findByIdIn(List<Long> ids);
 }

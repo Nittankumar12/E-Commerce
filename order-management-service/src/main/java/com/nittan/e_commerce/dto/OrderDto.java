@@ -2,6 +2,7 @@ package com.nittan.e_commerce.dto;
 
 import java.util.List;
 
+// order dto
 public class OrderDto {
     private Integer userId;
     private List<Long> productIds;

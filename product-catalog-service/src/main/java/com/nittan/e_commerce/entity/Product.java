@@ -6,6 +6,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.*;
 
+// product entity
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor

@@ -5,6 +5,7 @@ import com.nittan.e_commerce.entity.Product;
 import java.time.LocalDateTime;
 import java.util.List;
 
+// order response dto
 public class OrderResponseDto {
     private Long orderId;
     private Integer userId;

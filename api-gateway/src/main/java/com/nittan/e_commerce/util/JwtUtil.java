@@ -25,7 +25,7 @@ public class JwtUtil {
         Jwts.parserBuilder().setSigningKey(getSigninKey()).build().parseClaimsJws(token);
     }
 
-
+    // get sign in key from base64
     private Key getSigninKey() {
         byte[] keyBytes = Decoders.BASE64.decode(SECRET);
         return Keys.hmacShaKeyFor(keyBytes);

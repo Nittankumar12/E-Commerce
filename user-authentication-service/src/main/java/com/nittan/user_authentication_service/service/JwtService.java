@@ -16,22 +16,8 @@ import java.util.Map;
 @Service
 public class JwtService {
 
-
     // predefined secret
-    public static final String SECRET = "5367566B59703373367639792F423F4528482B4D6251655468576D5A71347437";
-
-    // generating own secret using Secure Random Generator
-//    private static final int secret_length = 64;
-//    public static final String  SECRET = generateSecret();
-//
-//    private static String generateSecret() {
-//        SecureRandom random = new SecureRandom();
-//        byte[] bytes = new byte[secret_length];
-//        random.nextBytes(bytes);
-//        String secret =  Base64.getUrlEncoder().encodeToString(bytes);
-//        System.out.println(secret);
-//        return secret;
-//    }
+    public static final String SECRET = "5367566B59703373367639792F423F4528482B4D6251655468576D5A71347437";// generating own secret using Secure Random Generator
 
     // validating token
     public void validateToken(final String token){
@@ -63,3 +49,16 @@ public class JwtService {
 
 
 }
+
+
+//    private static final int secret_length = 64;
+//    public static final String  SECRET = generateSecret();
+//
+//    private static String generateSecret() {
+//        SecureRandom random = new SecureRandom();
+//        byte[] bytes = new byte[secret_length];
+//        random.nextBytes(bytes);
+//        String secret =  Base64.getUrlEncoder().encodeToString(bytes);
+//        System.out.println(secret);
+//        return secret;
+//    }

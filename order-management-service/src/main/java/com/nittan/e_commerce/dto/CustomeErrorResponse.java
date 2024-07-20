@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;
 
 
+// custom error response
 @Data
 @NoArgsConstructor
 @Builder

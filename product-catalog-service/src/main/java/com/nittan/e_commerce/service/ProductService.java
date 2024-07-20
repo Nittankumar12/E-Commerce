@@ -20,6 +20,7 @@ public class ProductService {
 
     Logger logger= LoggerFactory.getLogger(ProductService.class);
 
+    // getting all products
     public List<Product> getAllProducts(){
         List<Product> products =  productDao.findAll();
         if(products.isEmpty()){
@@ -30,6 +31,7 @@ public class ProductService {
         return products;
     }
 
+    // get product by id
     public Product getProductById(Long id) {
         try{
             return productDao.findById(id).get();
@@ -39,6 +41,7 @@ public class ProductService {
         }
     }
 
+    // add new product
     public String addProduct(Product product) {
         if (productDao.existsByProductName(product.getProductName())) {
             throw new GenericeException("Product already present with same name");
@@ -47,6 +50,7 @@ public class ProductService {
         return "Product added successfully";
     }
 
+    // update product details
     public Product updateProduct(Product product) {
         Optional<Product> optionalProduct = productDao.findById(product.getId());
         Product updatedProduct = optionalProduct.get();
@@ -57,6 +61,7 @@ public class ProductService {
         return updatedProduct;
     }
 
+    // delete a product
     public String deleteProduct(Long id) {
         if (!productDao.existsById(id)) {
            throw new ProductNotFoundException("Product already not found");
@@ -66,6 +71,7 @@ public class ProductService {
     }
 
 
+    // get products for order
     public List<Product> getProductsForOrder(List<Long> productIds) {
         List<Product> products = null;
         try {

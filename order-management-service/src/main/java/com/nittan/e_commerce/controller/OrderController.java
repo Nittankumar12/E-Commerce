@@ -32,10 +32,7 @@ public class OrderController {
     // create order
     @PostMapping("create")
     public OrderResponseDto createOrder(@RequestBody OrderDto orderDto) {
-        System.out.println("in order creation endpoint");
-        OrderResponseDto order = orderService.createOrder(orderDto);
-        System.out.println("got response");
-        return order;
+        return orderService.createOrder(orderDto);
     }
 
     // get order by id
@@ -58,15 +55,14 @@ public class OrderController {
     // delete order
     @DeleteMapping("delete/{id}")
     public String deleteOrder(@PathVariable Long id) {
-        String response = orderService.deleteOrder(id);
-        return response;
+        return orderService.deleteOrder(id);
     }
 
     // get all orders and their products
     @GetMapping("orders")
     public ResponseEntity<List<OrderResponseDto>> getAllOrders(){
         List<OrderResponseDto> orderResponseDtos = orderService.getAllOrders();
-        return  new ResponseEntity<>(orderResponseDtos,HttpStatus.OK);
+        return new ResponseEntity<>(orderResponseDtos,HttpStatus.OK);
     }
 
     // get all products available in product service

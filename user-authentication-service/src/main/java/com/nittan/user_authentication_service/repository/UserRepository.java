@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
+// user repository
 @Repository
 public interface UserRepository extends JpaRepository<UserCredential,Integer> {
 

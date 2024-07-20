@@ -19,11 +19,13 @@ import org.springframework.security.web.SecurityFilterChain;
 public class AuthConfig {
 
 
+    // return custom user details
     @Bean
     public UserDetailsService userDetailsService(){
         return new MyUserDetailsService();
     }
 
+    // dao authentication provider
     @Bean
     public AuthenticationProvider authenticationProvider(){
         DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
@@ -33,11 +35,14 @@ public class AuthConfig {
 
     }
 
+    // authentication manager
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
         return authConfig.getAuthenticationManager();
     }
 
+
+    // security configuration
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
          return http
@@ -52,6 +57,7 @@ public class AuthConfig {
 
     }
 
+    // bcrypt password encoder
     @Bean
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();

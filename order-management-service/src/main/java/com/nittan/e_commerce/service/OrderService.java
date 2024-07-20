@@ -42,21 +42,18 @@ public class OrderService {
         try {
             products = productClient.getProductsForOrder(orderDto.getProductIds());
         } catch (Exception errorException) {
-            System.out.println("got error");
              log.error("ProductServiceClient::Getting products caught the HttpServer server error {}", errorException.toString());
             throw new ProductServiceException("Products not found");
         }
-            System.out.println("got order");
+
             if (products.getStatusCode() == HttpStatus.OK) {
                 System.out.println("I am order, i got products");
                 Order order = new Order();
                 order.setUserId(orderDto.getUserId());
                 order.setProductIds(orderDto.getProductIds());
                 order.setStatus("CREATED");
-                System.out.println("saving to repo");
                 orderDao.save(order);
                 logger.info("Creating order and got products from product-service {}" + products.getBody().size());
-                System.out.println("setting responsedto of order");
                 OrderResponseDto orderResponseDto = new OrderResponseDto();
                 orderResponseDto.setOrderId(order.getId());
                 orderResponseDto.setUserId(order.getUserId());
@@ -64,14 +61,12 @@ public class OrderService {
                 orderResponseDto.setCreatedAt(order.getCreatedAt());
                 orderResponseDto.setLastModified(order.getLastModified());
                 orderResponseDto.setProducts(products.getBody());
-                System.out.println("returning responsedto of order");
                 if(orderResponseDto.getProducts().size() != orderDto.getProductIds().size()){
                     log.error("ProductServiceClient::Getting products caught the HttpServer server error {}");
                     throw new ProductServiceException("all products not found");
                 }
                 return orderResponseDto;
             }
-            System.out.println("not found");
             throw new ProductServiceException("Error while getting products from product service");
         }
 
@@ -80,12 +75,10 @@ public class OrderService {
     public OrderResponseDto getOrderById(Long id) {
         Optional<Order> orderOptional = orderDao.findById(id);
         if (orderOptional.isEmpty()) {
-            return null;
+            throw new OrderNotFoundException("Order not found for this order id and it got handled");
         }
         Order order = orderOptional.get();
-        System.out.println("going for order products");
         ResponseEntity<List<Product>> products = productClient.getProductsForOrder(order.getProductIds());
-        System.out.println("products fetched");
         if(products.getStatusCode()== HttpStatus.OK) {
             OrderResponseDto orderResponseDto = new OrderResponseDto();
             orderResponseDto.setOrderId(order.getId());
@@ -98,7 +91,6 @@ public class OrderService {
             logger.info("got products {}" + products.getBody().size());
             return orderResponseDto;
         }else{
-            System.out.println("not found");
             throw new OrderNotFoundException("Order not found with this id");
         }
     }
@@ -115,6 +107,7 @@ public class OrderService {
         return "Order status updated";
     }
 
+    // delete order by id
     public String deleteOrder(Long orderId) {
         if (!orderDao.existsById(orderId)) {
             throw new OrderNotFoundException("order not found with this id");

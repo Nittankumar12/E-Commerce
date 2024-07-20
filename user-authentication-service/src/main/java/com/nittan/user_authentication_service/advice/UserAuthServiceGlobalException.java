@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 @Slf4j
 public class UserAuthServiceGlobalException {
+
+    // Invalid User Exception handler
    @ExceptionHandler(InvalidUserException.class)
     public ResponseEntity<?> handleOrderNotFoundException(InvalidUserException exception){
         CustomeErrorResponse errorResponse = CustomeErrorResponse.builder()
@@ -26,6 +28,7 @@ public class UserAuthServiceGlobalException {
 
     }
 
+    // Invalid token exception handler
     @ExceptionHandler(InvalidTokenException.class)
     public ResponseEntity<?> handleOrderNotFoundException(InvalidTokenException exception){
         CustomeErrorResponse errorResponse = CustomeErrorResponse.builder()
@@ -38,6 +41,7 @@ public class UserAuthServiceGlobalException {
 
     }
 
+    // generic exception handler
     @ExceptionHandler(GenericException.class)
     public ResponseEntity<?> handleOrderNotFoundException(GenericException exception){
         CustomeErrorResponse errorResponse = CustomeErrorResponse.builder()

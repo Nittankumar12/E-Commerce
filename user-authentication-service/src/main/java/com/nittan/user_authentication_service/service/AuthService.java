@@ -45,19 +45,29 @@ public class AuthService {
     }
 
 
+    // generating token
     public String generateToken(UserAuthRequest user){
         try{
+            // authenticate user credentials
         Authentication authenticate = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getName(), user.getPassword()));
         }catch(Exception e){
          throw new InvalidUserException("Invalid Credentials");
         }
-        return jwtService.generateToken(user.getName());
+        try{
+            // generate token and return it
+            return jwtService.generateToken((user.getName()));
+        }
+        catch (Exception e){
+            throw new GenericException("Error while creating token");
+        }
     }
 
+    // validating token
     public void validateToken(String token){
         System.out.println("user auth validate token called");
         try{
-        jwtService.validateToken(token);
+            // validating token
+            jwtService.validateToken(token);
         }
         catch(Exception e){
             throw new InvalidTokenException("The token is expired or invalid");

@@ -5,7 +5,9 @@ import com.nittan.e_commerce.entity.Product;
 import java.time.LocalDateTime;
 import java.util.List;
 
-// order response dto
+/**
+ * DTO for representing order response details.
+ */
 public class OrderResponseDto {
     private Long orderId;
     private Integer userId;
@@ -14,6 +16,7 @@ public class OrderResponseDto {
     private LocalDateTime lastModified;
     private List<Product> products;
 
+    // Getters and setters for all fields
     public Long getOrderId() {
         return orderId;
     }

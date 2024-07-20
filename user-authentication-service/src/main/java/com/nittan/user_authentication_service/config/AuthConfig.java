@@ -18,46 +18,61 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class AuthConfig {
 
-
-    // return custom user details
+    /**
+     * Provides the custom implementation of UserDetailsService.
+     * @return An instance of MyUserDetailsService
+     */
     @Bean
     public UserDetailsService userDetailsService(){
         return new MyUserDetailsService();
     }
 
-    // dao authentication provider
+    /**
+     * Configures and provides the DaoAuthenticationProvider.
+     * Sets the UserDetailsService and PasswordEncoder.
+     * @return An instance of DaoAuthenticationProvider
+     */
     @Bean
     public AuthenticationProvider authenticationProvider(){
         DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
         daoAuthenticationProvider.setUserDetailsService(userDetailsService());
         daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
         return daoAuthenticationProvider;
-
     }
 
-    // authentication manager
+    /**
+     * Provides the AuthenticationManager by retrieving it from the AuthenticationConfiguration.
+     * @param authConfig The AuthenticationConfiguration instance
+     * @return The AuthenticationManager instance
+     * @throws Exception If there is an issue retrieving the AuthenticationManager
+     */
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
         return authConfig.getAuthenticationManager();
     }
 
-
-    // security configuration
+    /**
+     * Configures the HttpSecurity to define which endpoints require authentication and which do not.
+     * Disables CSRF protection and allows specific endpoints to be accessed without authentication.
+     * @param http The HttpSecurity instance to configure
+     * @return The SecurityFilterChain instance
+     * @throws Exception If there is an issue configuring HttpSecurity
+     */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-         return http
+        return http
                 .csrf(customizer -> customizer.disable())
                 .authorizeHttpRequests(request -> request
                         .requestMatchers("/auth/register","/auth/getToken", "/auth/validateToken")
                         .permitAll()
                         .anyRequest().authenticated())
-                  .build();
-//                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-//                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
-
+                .build();
     }
 
-    // bcrypt password encoder
+    /**
+     * Provides the BCryptPasswordEncoder for encoding passwords.
+     * @return The PasswordEncoder instance
+     */
     @Bean
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();

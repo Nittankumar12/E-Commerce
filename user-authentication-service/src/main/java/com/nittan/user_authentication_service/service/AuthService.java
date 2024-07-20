@@ -1,6 +1,5 @@
 package com.nittan.user_authentication_service.service;
 
-
 import com.nittan.user_authentication_service.dto.UserAuthRequest;
 import com.nittan.user_authentication_service.entity.UserCredential;
 import com.nittan.user_authentication_service.exception.GenericException;
@@ -14,6 +13,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+/**
+ * Service class for handling user authentication operations.
+ */
 @Service
 public class AuthService {
 
@@ -29,49 +31,48 @@ public class AuthService {
     @Autowired
     AuthenticationManager authenticationManager;
 
+    /**
+     * Register a new user.
+     * @param user The UserCredential object containing user details
+     * @return A message indicating the result of the registration process
+     */
     public String saveUser(UserCredential user){
-        try{
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        }
-        catch(Exception e){
-            throw new GenericException("Password Encoding error");
-        }
-        try{
-        repository.save(user);
-        }catch(Exception e){
+        try {
+            // Encode user's password before saving
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+            repository.save(user);
+        } catch (Exception e) {
             throw new GenericException("Error while saving user to the database");
         }
-        return "user registered successsfully";
+        return "User registered successfully";
     }
 
-
-    // generating token
+    /**
+     * Generate a JWT token based on user credentials.
+     * @param user The UserAuthRequest object containing user authentication details
+     * @return The generated JWT token
+     */
     public String generateToken(UserAuthRequest user){
-        try{
-            // authenticate user credentials
-        Authentication authenticate = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getName(), user.getPassword()));
-        }catch(Exception e){
-         throw new InvalidUserException("Invalid Credentials");
-        }
-        try{
-            // generate token and return it
-            return jwtService.generateToken((user.getName()));
-        }
-        catch (Exception e){
-            throw new GenericException("Error while creating token");
+        try {
+            // Authenticate user credentials
+            Authentication authenticate = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getName(), user.getPassword()));
+            // Generate and return JWT token
+            return jwtService.generateToken(user.getName());
+        } catch (Exception e) {
+            throw new InvalidUserException("Invalid credentials");
         }
     }
 
-    // validating token
+    /**
+     * Validate a JWT token.
+     * @param token The JWT token to validate
+     */
     public void validateToken(String token){
-        System.out.println("user auth validate token called");
-        try{
-            // validating token
+        try {
+            // Validate JWT token
             jwtService.validateToken(token);
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             throw new InvalidTokenException("The token is expired or invalid");
         }
     }
-
 }

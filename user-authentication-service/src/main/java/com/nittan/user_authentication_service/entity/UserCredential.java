@@ -8,16 +8,19 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * Entity class representing user credentials stored in the database.
+ */
 @Entity
-@NoArgsConstructor
 @Data
+@NoArgsConstructor
 @AllArgsConstructor
 public class UserCredential {
 
     @Id
-    @GeneratedValue(strategy =  GenerationType.IDENTITY)
-    private int id;
-    private String name;
-    private String email;
-    private String password;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;           // Unique identifier for the user
+    private String name;      // User's name or username
+    private String email;     // User's email address
+    private String password;  // User's password
 }

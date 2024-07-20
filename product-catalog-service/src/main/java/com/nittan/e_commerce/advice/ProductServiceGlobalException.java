@@ -10,11 +10,19 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+/**
+ * Global exception handler for ProductService.
+ */
 @RestControllerAdvice
 @Slf4j
 public class ProductServiceGlobalException {
 
-    // product not found exception handler
+    /**
+     * Exception handler for ProductNotFoundException.
+     *
+     * @param exception The exception instance.
+     * @return ResponseEntity containing error response.
+     */
     @ExceptionHandler(ProductNotFoundException.class)
     public ResponseEntity<?> handleProductNotFoundException(ProductNotFoundException exception){
         CustomeErrorResponse errorResponse = CustomeErrorResponse.builder()
@@ -22,12 +30,16 @@ public class ProductServiceGlobalException {
                 .errorCode(GlobalErrorCode.ERROR_ORDER_NOT_FOUND)
                 .errorMessage(exception.getMessage())
                 .build();
-        log.error("ProductServiceGlobalExceptionHandler::handleOrderNotFoundException exception caught {}", exception.getMessage());
+        log.error("ProductServiceGlobalExceptionHandler::handleProductNotFoundException - Exception: {}", exception.getMessage());
         return ResponseEntity.internalServerError().body(errorResponse);
-
     }
 
-    // generic exception handler
+    /**
+     * Exception handler for GenericeException (Generic exception).
+     *
+     * @param exception The exception instance.
+     * @return ResponseEntity containing error response.
+     */
     @ExceptionHandler(GenericeException.class)
     public ResponseEntity<?> handleGenericException(Exception exception){
         CustomeErrorResponse errorResponse = CustomeErrorResponse.builder()
@@ -35,8 +47,7 @@ public class ProductServiceGlobalException {
                 .errorCode(GlobalErrorCode.GENERIC_ERROR)
                 .errorMessage(exception.getMessage())
                 .build();
-        log.error("ProductServiceGlobalExceptionHandler::Generic exception caught {}", exception.getMessage());
+        log.error("ProductServiceGlobalExceptionHandler::handleGenericException - Exception: {}", exception.getMessage());
         return ResponseEntity.internalServerError().body(errorResponse);
-
     }
 }

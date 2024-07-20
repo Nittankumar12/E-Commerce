@@ -3,7 +3,9 @@ package com.nittan.e_commerce.entity;
 
 import lombok.AllArgsConstructor;
 
-// product
+/**
+ * Entity class representing a product.
+ */
 @AllArgsConstructor
 public class Product {
     private Long id;

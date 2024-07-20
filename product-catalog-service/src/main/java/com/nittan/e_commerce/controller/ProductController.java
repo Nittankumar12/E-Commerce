@@ -9,9 +9,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Controller for handling product-related operations.
+ */
 @RestController
 @RequestMapping("product")
 public class ProductController {
@@ -22,48 +24,72 @@ public class ProductController {
     @Autowired
     Environment environment;
 
-    // get all products
+    /**
+     * Endpoint to retrieve all products.
+     *
+     * @return List of Product entities.
+     */
     @GetMapping("products")
     public List<Product> getAllProducts() {
         return productService.getAllProducts();
     }
 
-    // get product by id
+    /**
+     * Endpoint to retrieve a product by its ID.
+     *
+     * @param id The ID of the product to retrieve.
+     * @return The Product entity.
+     */
     @GetMapping("products/{id}")
     public Product getProductById(@PathVariable Long id){
-        Product product = productService.getProductById(id);
-        return product;
+        return productService.getProductById(id);
     }
 
-    // add new product
+    /**
+     * Endpoint to add a new product.
+     *
+     * @param product The Product object to add.
+     * @return Confirmation message.
+     */
     @PostMapping("add")
     public String addProduct(@RequestBody Product product){
         return productService.addProduct(product);
     }
 
-
-    // update product
+    /**
+     * Endpoint to update an existing product.
+     *
+     * @param product The Product object with updated information.
+     * @return The updated Product entity.
+     */
     @PutMapping("update")
     public Product updateProduct(@RequestBody Product product){
         return productService.updateProduct(product);
     }
 
-
-    // delete product
+    /**
+     * Endpoint to delete a product by its ID.
+     *
+     * @param id The ID of the product to delete.
+     * @return Confirmation message.
+     */
     @DeleteMapping("delete/{id}")
     public String deleteProduct(@PathVariable Long id){
         productService.deleteProduct(id);
         return "deleted";
     }
 
-    // get products for the order
+    /**
+     * Endpoint to retrieve products for a given list of product IDs.
+     *
+     * @param productIds The list of product IDs to retrieve.
+     * @return ResponseEntity containing the list of Product entities or NOT_FOUND if no products are found.
+     */
     @PostMapping("getProductsForOrder")
     public ResponseEntity<List<Product>> getProductsForOrder(@RequestBody List<Long> productIds){
-    System.out.println(environment.getProperty("local.server.port"));
-    List<Product> products = productService.getProductsForOrder(productIds);
-    if(products == null) return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
-    return new ResponseEntity<>(products,HttpStatus.OK);
+        System.out.println(environment.getProperty("local.server.port"));
+        List<Product> products = productService.getProductsForOrder(productIds);
+        if(products == null) return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(products, HttpStatus.OK);
     }
-
-
 }

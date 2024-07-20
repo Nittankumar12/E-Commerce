@@ -12,18 +12,26 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Service class for handling product-related operations.
+ */
 @Service
 public class ProductService {
 
     @Autowired
     private ProductDao productDao;
 
-    Logger logger= LoggerFactory.getLogger(ProductService.class);
+    private final Logger logger = LoggerFactory.getLogger(ProductService.class);
 
-    // getting all products
-    public List<Product> getAllProducts(){
-        List<Product> products =  productDao.findAll();
-        if(products.isEmpty()){
+    /**
+     * Retrieves all products from the database.
+     *
+     * @return List of Product entities
+     * @throws ProductNotFoundException if no products are found
+     */
+    public List<Product> getAllProducts() {
+        List<Product> products = productDao.findAll();
+        if (products.isEmpty()) {
             logger.warn("No products found");
             throw new ProductNotFoundException("No products found");
         }
@@ -31,17 +39,26 @@ public class ProductService {
         return products;
     }
 
-    // get product by id
+    /**
+     * Retrieves a product by its ID.
+     *
+     * @param id ID of the product to retrieve
+     * @return Product entity
+     * @throws ProductNotFoundException if no product is found with the given ID
+     */
     public Product getProductById(Long id) {
-        try{
-            return productDao.findById(id).get();
-        }
-        catch(Exception exception){
-            throw new ProductNotFoundException("Product not found with this id");
-        }
+        Optional<Product> productOptional = productDao.findById(id);
+        Product product = productOptional.orElseThrow(() -> new ProductNotFoundException("Product not found with this id"));
+        return product;
     }
 
-    // add new product
+    /**
+     * Adds a new product to the database.
+     *
+     * @param product Product entity to add
+     * @return Success message upon successful addition
+     * @throws GenericeException if a product with the same name already exists
+     */
     public String addProduct(Product product) {
         if (productDao.existsByProductName(product.getProductName())) {
             throw new GenericeException("Product already present with same name");
@@ -50,43 +67,59 @@ public class ProductService {
         return "Product added successfully";
     }
 
-    // update product details
+    /**
+     * Updates an existing product in the database.
+     *
+     * @param product Product entity with updated details
+     * @return Updated Product entity
+     * @throws ProductNotFoundException if no product is found with the given ID
+     */
     public Product updateProduct(Product product) {
         Optional<Product> optionalProduct = productDao.findById(product.getId());
-        Product updatedProduct = optionalProduct.get();
-        if(updatedProduct == null) throw new ProductNotFoundException("No product found with this id");
+        Product updatedProduct = optionalProduct.orElseThrow(() -> new ProductNotFoundException("No product found with this id"));
         updatedProduct.setProductName(product.getProductName());
         updatedProduct.setProductPrice(product.getProductPrice());
         productDao.save(updatedProduct);
         return updatedProduct;
     }
 
-    // delete a product
+    /**
+     * Deletes a product from the database by its ID.
+     *
+     * @param id ID of the product to delete
+     * @return Success message upon successful deletion
+     * @throws ProductNotFoundException if no product is found with the given ID
+     */
     public String deleteProduct(Long id) {
         if (!productDao.existsById(id)) {
-           throw new ProductNotFoundException("Product already not found");
+            throw new ProductNotFoundException("Product not found with this id");
         }
         productDao.deleteById(id);
         return "Product deleted successfully";
     }
 
-
-    // get products for order
+    /**
+     * Retrieves products based on a list of product IDs.
+     *
+     * @param productIds List of product IDs to retrieve
+     * @return List of Product entities matching the given IDs
+     * @throws ProductNotFoundException if no products are found from the given list of IDs
+     */
     public List<Product> getProductsForOrder(List<Long> productIds) {
-        List<Product> products = null;
+        List<Product> products;
         try {
             products = productDao.findByIdIn(productIds);
+        } catch (Exception ex) {
+            throw new ProductNotFoundException("Products not found from the given list or wrong product IDs");
         }
-        catch(Exception ex){
-            throw new ProductNotFoundException("product not found from the given list or wrong product ids");
+        if (products.isEmpty()) {
+            logger.warn("No products found");
+            throw new ProductNotFoundException("No products found");
         }
-        if(products.isEmpty()){
-            logger.warn("Not Products found");
-            throw new ProductNotFoundException("No Products not found");
+        if (products.size() < productIds.size()) {
+            throw new ProductNotFoundException("Not all products found");
         }
-        if(products.size() < productIds.size()) throw new ProductNotFoundException(" Not all products found");
         logger.info("Retrieved {} products " + products.size());
         return products;
     }
-
 }

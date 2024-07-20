@@ -1,23 +1,3 @@
-//package com.nittan.e_commerce.client;
-//
-//import com.netflix.discovery.converters.Auto;
-//import com.nittan.e_commerce.entity.Product;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.cloud.openfeign.FeignClient;
-//import org.springframework.http.ResponseEntity;
-//import org.springframework.web.bind.annotation.PostMapping;
-//import org.springframework.web.bind.annotation.RequestBody;
-//
-//import java.util.List;
-//
-//@FeignClient(name = "PRODUCT-SERVICE", url = "${product.service.url}")
-//public interface ProductClient {
-//
-//    @PostMapping("/product/getProductsForOrder")
-//    ResponseEntity<List<Product>> getProductsForOrder(@RequestBody List<Long> productIds);
-//}
-
-
 package com.nittan.e_commerce.client;
 
 import com.nittan.e_commerce.entity.Product;
@@ -29,14 +9,24 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
+/**
+ * Feign client interface for interacting with Product Catalog Service.
+ */
 @FeignClient(name = "PRODUCT-CATALOG-SERVICE")
 public interface ProductClient {
 
-    // get products for creation of order from the product service
+    /**
+     * Retrieves products for the given list of product IDs.
+     * @param productIds List of product IDs.
+     * @return ResponseEntity containing a list of products.
+     */
     @PostMapping("/product/getProductsForOrder")
     ResponseEntity<List<Product>> getProductsForOrder(@RequestBody List<Long> productIds);
 
-    // get available products
+    /**
+     * Retrieves all available products from the Product Catalog Service.
+     * @return List of products.
+     */
     @GetMapping("/product/products")
     List<Product> getAllProducts();
 }

@@ -1,12 +1,14 @@
 package com.nittan.e_commerce.dto;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;
 
-
-// custom error response
+/**
+ * DTO for representing custom error responses.
+ */
 @Data
 @NoArgsConstructor
 @Builder

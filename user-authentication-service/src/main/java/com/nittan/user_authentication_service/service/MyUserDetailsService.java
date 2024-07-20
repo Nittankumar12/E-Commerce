@@ -11,6 +11,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+/**
+ * Custom implementation of UserDetailsService to load user details by username.
+ */
 @Service
 public class MyUserDetailsService implements UserDetailsService {
 
@@ -19,7 +22,11 @@ public class MyUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<UserCredential> userCredential =  userRepository.findByName(username);
-        return userCredential.map(UserPrincipal::new).orElseThrow(() -> new UsernameNotFoundException("user not found " + username));
+        // Retrieve user credentials from repository by username
+        Optional<UserCredential> userCredential = userRepository.findByName(username);
+
+        // Map user credentials to UserPrincipal or throw exception if user not found
+        return userCredential.map(UserPrincipal::new)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
     }
 }

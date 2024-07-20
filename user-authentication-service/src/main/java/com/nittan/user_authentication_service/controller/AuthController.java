@@ -13,25 +13,34 @@ public class AuthController {
     @Autowired
     AuthService authService;
 
-    // register new user
+    /**
+     * Endpoint to register a new user.
+     * @param user The UserCredential object containing user details
+     * @return A message indicating the result of the registration process
+     */
     @PostMapping("/register")
     public String addUser(@RequestBody UserCredential user){
         return authService.saveUser(user);
     }
 
-    // get token through credentials
+    /**
+     * Endpoint to obtain a JWT token based on user credentials.
+     * @param user The UserAuthRequest object containing user authentication details
+     * @return A JWT token as a String
+     */
     @PostMapping("/getToken")
     public String getToken(@RequestBody UserAuthRequest user){
         return authService.generateToken(user);
     }
 
-    // validating token
+    /**
+     * Endpoint to validate a JWT token.
+     * @param token The JWT token to be validated
+     * @return A message indicating the validation result ("Token is Valid" if valid)
+     */
     @GetMapping("/validateToken")
-    public String getToken(@RequestParam("token") String token){
+    public String validateToken(@RequestParam("token") String token){
         authService.validateToken(token);
         return "Token is Valid";
     }
-
-
-
 }

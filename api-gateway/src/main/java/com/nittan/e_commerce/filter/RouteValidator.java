@@ -3,13 +3,16 @@ package com.nittan.e_commerce.filter;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
+import java.util.List;
 import java.util.function.Predicate;
 
+/**
+ * Component to validate if a route is secured or not.
+ */
 @Component
 public class RouteValidator {
 
-    // open end points that do not require authorization
+    // List of open endpoints that do not require authorization
     public static final List<String> openApiEndpoints = List.of(
             "/auth/register",
             "/auth/getToken",
@@ -17,10 +20,11 @@ public class RouteValidator {
             "/eureka"
     );
 
-    // check if secured
+    /**
+     * Predicate to check if a request is secured based on URI.
+     */
     public Predicate<ServerHttpRequest> isSecured =
             request -> openApiEndpoints
                     .stream()
                     .noneMatch(uri -> request.getURI().getPath().contains(uri));
 }
-

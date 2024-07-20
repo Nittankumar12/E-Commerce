@@ -1,34 +1,35 @@
 package com.nittan.e_commerce.util;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import java.security.Key;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
+/**
+ * Utility class for JWT token generation and validation.
+ */
 @Component
 public class JwtUtil {
 
-    // secret for generating token
+    // Secret key for JWT token signing
     public static final String SECRET = "5367566B59703373367639792F423F4528482B4D6251655468576D5A71347437";
 
-    // validating token
+    /**
+     * Validates a JWT token.
+     * @param token The JWT token to validate
+     */
     public void validateToken(final String token){
-        Jwts.parserBuilder().setSigningKey(getSigninKey()).build().parseClaimsJws(token);
+        Jwts.parserBuilder().setSigningKey(getSigningKey()).build().parseClaimsJws(token);
     }
 
-    // get sign in key from base64
-    private Key getSigninKey() {
+    /**
+     * Retrieves the signing key from base64-encoded secret.
+     * @return Signing key
+     */
+    private Key getSigningKey() {
         byte[] keyBytes = Decoders.BASE64.decode(SECRET);
         return Keys.hmacShaKeyFor(keyBytes);
     }
-
 }

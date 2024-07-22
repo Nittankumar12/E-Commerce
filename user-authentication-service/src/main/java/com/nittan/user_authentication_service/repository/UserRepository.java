@@ -18,4 +18,11 @@ public interface UserRepository extends JpaRepository<UserCredential,Integer> {
      * @return Optional containing UserCredential if found, empty otherwise
      */
     Optional<UserCredential> findByName(String username);
+
+    /**
+     * Find a user by their email.
+     * @param email The email to search for
+     * @return Optional containing UserCredential if found, empty otherwise
+     */
+    UserCredential findByEmail(String email);
 }

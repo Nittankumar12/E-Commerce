@@ -4,6 +4,7 @@ import com.nittan.user_authentication_service.dto.UserAuthRequest;
 import com.nittan.user_authentication_service.entity.UserCredential;
 import com.nittan.user_authentication_service.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -42,5 +43,24 @@ public class AuthController {
     public String validateToken(@RequestParam("token") String token){
         authService.validateToken(token);
         return "Token is Valid";
+    }
+
+
+    /**
+     * Endpoint get a user by email.
+     * @param email of user
+     * @return UserResponseDto object
+     */
+    @GetMapping("/getUserByEmail")
+    public ResponseEntity<?> getUserByEmail(@RequestParam("email") String email){
+        System.out.println("in controller");
+        return authService.getUserByEmail(email);
+    }
+
+
+    @GetMapping("/getUserById")
+    public ResponseEntity<?> getUserById(@RequestParam("id") Integer id){
+        System.out.println("in controller");
+        return authService.getUserById(id);
     }
 }

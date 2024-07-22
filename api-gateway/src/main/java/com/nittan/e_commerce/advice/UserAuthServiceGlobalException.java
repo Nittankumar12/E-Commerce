@@ -1,14 +1,14 @@
-package com.nittan.user_authentication_service.advice;
+package com.nittan.e_commerce.advice;
 
-import com.nittan.user_authentication_service.dto.CustomeErrorResponse;
-import com.nittan.user_authentication_service.dto.GlobalErrorCode;
-import com.nittan.user_authentication_service.exception.GenericException;
-import com.nittan.user_authentication_service.exception.InvalidTokenException;
-import com.nittan.user_authentication_service.exception.InvalidUserException;
+import com.nittan.e_commerce.exception.GenericException;
+import com.nittan.e_commerce.exception.InvalidTokenException;
+import com.nittan.e_commerce.exception.InvalidUserException;
+import com.nittan.e_commerce.exception.UsernameNotFoundException;
+import com.nittan.e_commerce.util.CustomeErrorResponse;
+import com.nittan.e_commerce.util.GlobalErrorCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 

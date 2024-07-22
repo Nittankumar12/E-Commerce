@@ -1,5 +1,8 @@
 package com.nittan.e_commerce.filter;
 
+import com.nittan.e_commerce.exception.GenericException;
+import com.nittan.e_commerce.exception.InvalidTokenException;
+import com.nittan.e_commerce.exception.InvalidUserException;
 import com.nittan.e_commerce.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
@@ -35,14 +38,16 @@ public class JwtAuthFilter extends AbstractGatewayFilterFactory<JwtAuthFilter.Co
     public GatewayFilter apply(Config config) {
         return ((exchange,chain) -> {
 
+            System.out.println("in gateway filter");
             // Check if request needs to be secured
             if(routeValidator.isSecured.test(exchange.getRequest())){
                 // Check if Authorization header is present
                 if(!exchange.getRequest().getHeaders().containsKey(HttpHeaders.AUTHORIZATION)){
-                    throw new RuntimeException("Missing authorization header");
+                    throw new InvalidTokenException("Missing authorization header");
                 }
                 String authHeader = exchange.getRequest().getHeaders().get(HttpHeaders.AUTHORIZATION).get(0);
 
+                System.out.println("got authorization header");
                 // Extract token from Authorization header
                 if(authHeader != null && authHeader.startsWith("Bearer ")){
                     authHeader = authHeader.substring(7);
@@ -52,7 +57,7 @@ public class JwtAuthFilter extends AbstractGatewayFilterFactory<JwtAuthFilter.Co
                     jwtUtil.validateToken(authHeader);
                 }
                 catch (Exception e){
-                    throw new RuntimeException("Unauthorized access");
+                    throw new InvalidUserException("Unauthorized access");
                 }
             }
 

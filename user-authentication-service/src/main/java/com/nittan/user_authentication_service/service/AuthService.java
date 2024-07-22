@@ -1,17 +1,24 @@
 package com.nittan.user_authentication_service.service;
 
 import com.nittan.user_authentication_service.dto.UserAuthRequest;
+import com.nittan.user_authentication_service.dto.UserResponseDto;
 import com.nittan.user_authentication_service.entity.UserCredential;
 import com.nittan.user_authentication_service.exception.GenericException;
 import com.nittan.user_authentication_service.exception.InvalidTokenException;
 import com.nittan.user_authentication_service.exception.InvalidUserException;
 import com.nittan.user_authentication_service.repository.UserRepository;
+import org.hibernate.boot.model.process.internal.UserTypeResolution;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 /**
  * Service class for handling user authentication operations.
@@ -75,4 +82,43 @@ public class AuthService {
             throw new InvalidTokenException("The token is expired or invalid");
         }
     }
+
+    /**
+     * get user by email
+     * @param email of the user
+     */
+    public ResponseEntity<?> getUserByEmail(String email) {
+        System.out.println("in service ");
+        UserCredential userCredential;
+        try{
+            userCredential = repository.findByEmail(email);
+        }
+        catch (Exception e){
+            throw new UsernameNotFoundException("User not found with this email");
+        }
+        UserResponseDto userResponseDto = new UserResponseDto(userCredential.getId(),userCredential.getName(),userCredential.getEmail());
+
+        return new ResponseEntity<>(userResponseDto, HttpStatus.OK);
+    }
+
+
+    /**
+     * get user by id
+     * @param id of the user
+     */
+    public ResponseEntity<?> getUserById(int id) {
+        System.out.println("in service ");
+        Optional<UserCredential> userCredential;
+        try{
+            userCredential = repository.findById(id);
+        }
+        catch (Exception e){
+            throw new UsernameNotFoundException("User not found with this id");
+        }
+        if(userCredential.isEmpty()) throw new UsernameNotFoundException("user not found with this id");
+        UserResponseDto userResponseDto = new UserResponseDto(userCredential.get().getId(),userCredential.get().getName(),userCredential.get().getEmail());
+
+        return new ResponseEntity<>(userResponseDto, HttpStatus.OK);
+    }
+
 }

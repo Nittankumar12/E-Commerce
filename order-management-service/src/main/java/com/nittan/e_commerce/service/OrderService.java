@@ -1,15 +1,16 @@
 package com.nittan.e_commerce.service;
 
 import com.nittan.e_commerce.client.ProductClient;
+import com.nittan.e_commerce.client.UserClient;
 import com.nittan.e_commerce.dao.OrderDao;
 import com.nittan.e_commerce.dto.OrderDto;
 import com.nittan.e_commerce.dto.OrderResponseDto;
 import com.nittan.e_commerce.entity.Order;
 import com.nittan.e_commerce.entity.Product;
-import com.nittan.e_commerce.exception.GenericeException;
+import com.nittan.e_commerce.entity.User;
 import com.nittan.e_commerce.exception.OrderNotFoundException;
 import com.nittan.e_commerce.exception.ProductServiceException;
-import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import com.nittan.e_commerce.exception.UserServiceException;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,6 +36,9 @@ public class OrderService {
     @Autowired
     private ProductClient productClient;
 
+    @Autowired
+    private UserClient userClient;
+
     Logger logger = LoggerFactory.getLogger(OrderService.class);
 
     /**
@@ -45,6 +49,15 @@ public class OrderService {
      * @throws ProductServiceException If products are not found or an error occurs while fetching products.
      */
     public OrderResponseDto createOrder(OrderDto orderDto) {
+
+        ResponseEntity<User> user = null;
+        try{
+            user = userClient.getUserById(orderDto.getUserId());
+        }
+        catch(Exception e){
+            throw new UserServiceException("User not found ,,,");
+        }
+
         ResponseEntity<List<Product>> products = null;
         try {
             products = productClient.getProductsForOrder(orderDto.getProductIds());
@@ -62,7 +75,8 @@ public class OrderService {
 
             OrderResponseDto orderResponseDto = new OrderResponseDto();
             orderResponseDto.setOrderId(order.getId());
-            orderResponseDto.setUserId(order.getUserId());
+            orderResponseDto.setUserEmail(user.getBody().getEmail());
+            orderResponseDto.setUserId(user.getBody().getId());
             orderResponseDto.setStatus(order.getStatus());
             orderResponseDto.setCreatedAt(order.getCreatedAt());
             orderResponseDto.setLastModified(order.getLastModified());
@@ -85,6 +99,7 @@ public class OrderService {
      * @throws OrderNotFoundException If no order is found with the specified ID.
      */
     public OrderResponseDto getOrderById(Long id) {
+
         Optional<Order> orderOptional = orderDao.findById(id);
         if (orderOptional.isEmpty()) {
             throw new OrderNotFoundException("Order not found for id: " + id);
@@ -92,10 +107,19 @@ public class OrderService {
         Order order = orderOptional.get();
         ResponseEntity<List<Product>> products = productClient.getProductsForOrder(order.getProductIds());
 
+        ResponseEntity<User> user = null;
+        try{
+            user = userClient.getUserById(order.getUserId());
+        }
+        catch(Exception e){
+            throw new UserServiceException("User not found");
+        }
+
         if (products.getStatusCode() == HttpStatus.OK) {
             OrderResponseDto orderResponseDto = new OrderResponseDto();
             orderResponseDto.setOrderId(order.getId());
-            orderResponseDto.setUserId(order.getUserId());
+            orderResponseDto.setUserEmail(user.getBody().getEmail());
+            orderResponseDto.setUserId(user.getBody().getId());
             orderResponseDto.setStatus(order.getStatus());
             orderResponseDto.setCreatedAt(order.getCreatedAt());
             orderResponseDto.setLastModified(order.getLastModified());
@@ -152,10 +176,18 @@ public class OrderService {
         List<OrderResponseDto> orderResponseList = new ArrayList<>();
         for (Order order : orders) {
             ResponseEntity<List<Product>> products = productClient.getProductsForOrder(order.getProductIds());
+            ResponseEntity<User> user = null;
+            try{
+                user = userClient.getUserById(order.getUserId());
+            }
+            catch(Exception e){
+                throw new UserServiceException("User not found");
+            }
             if (products.getStatusCode() == HttpStatus.OK) {
                 OrderResponseDto orderResponseDto = new OrderResponseDto();
                 orderResponseDto.setOrderId(order.getId());
-                orderResponseDto.setUserId(order.getUserId());
+                orderResponseDto.setUserEmail(user.getBody().getEmail());
+                orderResponseDto.setUserId(user.getBody().getId());
                 orderResponseDto.setStatus(order.getStatus());
                 orderResponseDto.setCreatedAt(order.getCreatedAt());
                 orderResponseDto.setLastModified(order.getLastModified());

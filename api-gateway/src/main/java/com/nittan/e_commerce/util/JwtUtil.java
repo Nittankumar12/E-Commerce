@@ -10,6 +10,7 @@ import java.security.Key;
 /**
  * Utility class for JWT token generation and validation.
  */
+
 @Component
 public class JwtUtil {
 
@@ -20,8 +21,8 @@ public class JwtUtil {
      * Validates a JWT token.
      * @param token The JWT token to validate
      */
+
     public void validateToken(final String token){
-        System.out.println("validate token called in gateway filter");
         Jwts.parserBuilder().setSigningKey(getSigningKey()).build().parseClaimsJws(token);
     }
 

@@ -3,6 +3,8 @@ package com.nittan.user_authentication_service.service;
 import com.nittan.user_authentication_service.entity.UserCredential;
 import com.nittan.user_authentication_service.entity.UserPrincipal;
 import com.nittan.user_authentication_service.repository.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -20,12 +22,14 @@ public class MyUserDetailsService implements UserDetailsService {
     @Autowired
     UserRepository userRepository;
 
+    private final Logger logger = LoggerFactory.getLogger(MyUserDetailsService.class);
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        System.out.println("loading username");
+        logger.info("loading username");
         // Retrieve user credentials from repository by username
         Optional<UserCredential> userCredential = userRepository.findByName(username);
-        System.out.println("got user");
+
         // Map user credentials to UserPrincipal or throw exception if user not found
         return userCredential.map(UserPrincipal::new)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));

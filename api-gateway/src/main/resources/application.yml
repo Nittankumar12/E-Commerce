@@ -19,6 +19,7 @@ spring:
             - Path= /order/**
           filters:
             - JwtAuthFilter
+
         - id: product-catalog-service
           uri: lb://PRODUCT-CATALOG-SERVICE
           predicates:
@@ -37,3 +38,7 @@ eureka:
 
 server:
   port: 8765
+
+logging:
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%X{traceId},%X{spanId}] %-5level %logger{36} - %msg%n"

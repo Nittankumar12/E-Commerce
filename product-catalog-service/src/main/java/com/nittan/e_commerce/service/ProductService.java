@@ -35,7 +35,7 @@ public class ProductService {
             logger.warn("No products found");
             throw new ProductNotFoundException("No products found");
         }
-        logger.info("Retrieved {} products " + products.size());
+        logger.info("Retrieved " + products.size() + " products ");
         return products;
     }
 
@@ -49,6 +49,7 @@ public class ProductService {
     public Product getProductById(Long id) {
         Optional<Product> productOptional = productDao.findById(id);
         Product product = productOptional.orElseThrow(() -> new ProductNotFoundException("Product not found with this id"));
+        logger.info("got product");
         return product;
     }
 
@@ -61,9 +62,11 @@ public class ProductService {
      */
     public String addProduct(Product product) {
         if (productDao.existsByProductName(product.getProductName())) {
+
             throw new GenericeException("Product already present with same name");
         }
         productDao.save(product);
+        logger.info("product saved to databaese");
         return "Product added successfully";
     }
 
@@ -80,6 +83,7 @@ public class ProductService {
         updatedProduct.setProductName(product.getProductName());
         updatedProduct.setProductPrice(product.getProductPrice());
         productDao.save(updatedProduct);
+        logger.info("product details updated");
         return updatedProduct;
     }
 
@@ -95,6 +99,7 @@ public class ProductService {
             throw new ProductNotFoundException("Product not found with this id");
         }
         productDao.deleteById(id);
+        logger.info("product deleted successfully");
         return "Product deleted successfully";
     }
 
@@ -110,6 +115,7 @@ public class ProductService {
         try {
             products = productDao.findByIdIn(productIds);
         } catch (Exception ex) {
+            logger.error("products missing");
             throw new ProductNotFoundException("Products not found from the given list or wrong product IDs");
         }
         if (products.isEmpty()) {
@@ -117,9 +123,10 @@ public class ProductService {
             throw new ProductNotFoundException("No products found");
         }
         if (products.size() < productIds.size()) {
+            logger.warn("not all products found");
             throw new ProductNotFoundException("Not all products found");
         }
-        logger.info("Retrieved {} products " + products.size());
+        logger.info("Retrieved" + products.size() +" products ");
         return products;
     }
 }

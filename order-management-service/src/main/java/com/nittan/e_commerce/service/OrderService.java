@@ -55,6 +55,7 @@ public class OrderService {
             user = userClient.getUserById(orderDto.getUserId());
         }
         catch(Exception e){
+            logger.error("user not found");
             throw new UserServiceException("User not found ,,,");
         }
 
@@ -71,8 +72,6 @@ public class OrderService {
             order.setUserId(orderDto.getUserId());
             order.setProductIds(orderDto.getProductIds());
             order.setStatus("CREATED");
-            orderDao.save(order);
-
             OrderResponseDto orderResponseDto = new OrderResponseDto();
             orderResponseDto.setOrderId(order.getId());
             orderResponseDto.setUserEmail(user.getBody().getEmail());
@@ -86,8 +85,11 @@ public class OrderService {
                 log.error("ProductServiceClient::Getting products caught the HttpServer server error {}");
                 throw new ProductServiceException("Not all products found");
             }
+            orderDao.save(order);
+            logger.info("order saved to the repo");
             return orderResponseDto;
         }
+        logger.error("error while getting products from product client");
         throw new ProductServiceException("Error while getting products from product service");
     }
 
@@ -102,6 +104,7 @@ public class OrderService {
 
         Optional<Order> orderOptional = orderDao.findById(id);
         if (orderOptional.isEmpty()) {
+            logger.error("Order not found ");
             throw new OrderNotFoundException("Order not found for id: " + id);
         }
         Order order = orderOptional.get();
@@ -124,9 +127,10 @@ public class OrderService {
             orderResponseDto.setCreatedAt(order.getCreatedAt());
             orderResponseDto.setLastModified(order.getLastModified());
             orderResponseDto.setProducts(products.getBody());
-            logger.info("Got {} products", products.getBody().size());
+            logger.info("Got "+ products.getBody().size() + " products");
             return orderResponseDto;
         } else {
+            logger.error("order not found with this id");
             throw new OrderNotFoundException("Order not found with id: " + id);
         }
     }
@@ -142,11 +146,13 @@ public class OrderService {
     public String updateOrderStatus(Long orderId, String status) {
         Optional<Order> orderOptional = orderDao.findById(orderId);
         if (orderOptional.isEmpty()) {
+            logger.error("order not found with this id");
             throw new OrderNotFoundException("Order not found with id: " + orderId);
         }
         Order order = orderOptional.get();
         order.setStatus(status);
         orderDao.save(order);
+        logger.info("order status updated");
         return "Order status updated";
     }
 
@@ -159,9 +165,11 @@ public class OrderService {
      */
     public String deleteOrder(Long orderId) {
         if (!orderDao.existsById(orderId)) {
+            logger.error("order doesn't exists");
             throw new OrderNotFoundException("Order not found with id: " + orderId);
         }
         orderDao.deleteById(orderId);
+        logger.info("order deleted");
         return "Order deleted successfully";
     }
 
@@ -181,6 +189,7 @@ public class OrderService {
                 user = userClient.getUserById(order.getUserId());
             }
             catch(Exception e){
+                logger.error("user not found");
                 throw new UserServiceException("User not found");
             }
             if (products.getStatusCode() == HttpStatus.OK) {
@@ -192,13 +201,15 @@ public class OrderService {
                 orderResponseDto.setCreatedAt(order.getCreatedAt());
                 orderResponseDto.setLastModified(order.getLastModified());
                 orderResponseDto.setProducts(products.getBody());
-                logger.info("Got {} products", products.getBody().size());
+                logger.info("Got "+ products.getBody().size()+" products");
                 orderResponseList.add(orderResponseDto);
             }
         }
         if (orderResponseList.isEmpty()) {
+            logger.error("order not found");
             throw new OrderNotFoundException("No orders found");
         }
+        logger.info("returning orderlist");
         return orderResponseList;
     }
 
@@ -211,11 +222,11 @@ public class OrderService {
     public List<Product> getAllProducts() {
         try {
             List<Product> products = productClient.getAllProducts();
-            logger.info("Got {} products", products.size());
+            logger.info("Got " + products.size() + " products");
             return products;
         } catch (Exception e) {
-            log.error("Error while fetching products from product service: {}", e.getMessage());
-            throw e;
+            log.error("Error while fetching products from product service", e.getMessage());
+            throw new ProductServiceException("products not found");
         }
     }
 }

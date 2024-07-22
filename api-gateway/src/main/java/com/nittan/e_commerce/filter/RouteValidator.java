@@ -17,6 +17,8 @@ public class RouteValidator {
             "/auth/register",
             "/auth/getToken",
             "/auth/validateToken",
+            "/auth/getUserByEmail",
+            "/auth/getUserById",
             "/eureka"
     );
 

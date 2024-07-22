@@ -21,6 +21,7 @@ public class JwtUtil {
      * @param token The JWT token to validate
      */
     public void validateToken(final String token){
+        System.out.println("validate token called in gateway filter");
         Jwts.parserBuilder().setSigningKey(getSigningKey()).build().parseClaimsJws(token);
     }
 

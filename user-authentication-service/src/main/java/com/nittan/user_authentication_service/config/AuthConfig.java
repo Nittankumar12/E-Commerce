@@ -63,7 +63,7 @@ public class AuthConfig {
         return http
                 .csrf(customizer -> customizer.disable())
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers("/auth/register","/auth/getToken", "/auth/validateToken")
+                        .requestMatchers("/auth/register","/auth/getToken", "/auth/validateToken","/auth/getUserByEmail","/auth/getUserById")
                         .permitAll()
                         .anyRequest().authenticated())
                 .build();

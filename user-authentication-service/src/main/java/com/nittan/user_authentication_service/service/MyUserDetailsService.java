@@ -22,9 +22,10 @@ public class MyUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        System.out.println("loading username");
         // Retrieve user credentials from repository by username
         Optional<UserCredential> userCredential = userRepository.findByName(username);
-
+        System.out.println("got user");
         // Map user credentials to UserPrincipal or throw exception if user not found
         return userCredential.map(UserPrincipal::new)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));

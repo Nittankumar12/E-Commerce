@@ -27,7 +27,6 @@ import java.util.Optional;
  * Service layer for handling order-related operations.
  */
 @Service
-@Slf4j
 public class OrderService {
 
     @Autowired
@@ -63,8 +62,12 @@ public class OrderService {
         try {
             products = productClient.getProductsForOrder(orderDto.getProductIds());
         } catch (Exception errorException) {
-            log.error("ProductServiceClient::Getting products caught the HttpServer server error {}", errorException.toString());
+            logger.error("ProductServiceClient::Getting products caught the HttpServer server error {}", errorException.toString());
             throw new ProductServiceException("Products not found");
+        }
+        if(products.getBody().size() != orderDto.getProductIds().size()){
+            logger.warn("not all products found, some are missing");
+            throw new ProductServiceException("Not all products found");
         }
 
         if (products.getStatusCode() == HttpStatus.OK) {
@@ -72,6 +75,8 @@ public class OrderService {
             order.setUserId(orderDto.getUserId());
             order.setProductIds(orderDto.getProductIds());
             order.setStatus("CREATED");
+            order = orderDao.save(order);
+
             OrderResponseDto orderResponseDto = new OrderResponseDto();
             orderResponseDto.setOrderId(order.getId());
             orderResponseDto.setUserEmail(user.getBody().getEmail());
@@ -81,11 +86,10 @@ public class OrderService {
             orderResponseDto.setLastModified(order.getLastModified());
             orderResponseDto.setProducts(products.getBody());
 
-            if (orderResponseDto.getProducts().size() != orderDto.getProductIds().size()) {
-                log.error("ProductServiceClient::Getting products caught the HttpServer server error {}");
-                throw new ProductServiceException("Not all products found");
-            }
-            orderDao.save(order);
+//            if (orderResponseDto.getProducts().size() != orderDto.getProductIds().size()) {
+//                log.error("ProductServiceClient::Getting products caught the HttpServer server error {}");
+//                throw new ProductServiceException("Not all products found");
+//            }
             logger.info("order saved to the repo");
             return orderResponseDto;
         }
@@ -225,7 +229,7 @@ public class OrderService {
             logger.info("Got " + products.size() + " products");
             return products;
         } catch (Exception e) {
-            log.error("Error while fetching products from product service", e.getMessage());
+            logger.error("Error while fetching products from product service", e.getMessage());
             throw new ProductServiceException("products not found");
         }
     }

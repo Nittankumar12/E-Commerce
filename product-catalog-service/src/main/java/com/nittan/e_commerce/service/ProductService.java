@@ -48,9 +48,12 @@ public class ProductService {
      */
     public Product getProductById(Long id) {
         Optional<Product> productOptional = productDao.findById(id);
-        Product product = productOptional.orElseThrow(() -> new ProductNotFoundException("Product not found with this id"));
+        if(productOptional.isEmpty()){
+            logger.error("product not found with id");
+            throw new ProductNotFoundException("Product not found");
+        }
         logger.info("got product");
-        return product;
+        return productOptional.get();
     }
 
     /**
@@ -62,7 +65,7 @@ public class ProductService {
      */
     public String addProduct(Product product) {
         if (productDao.existsByProductName(product.getProductName())) {
-
+            logger.warn("product already present with same name");
             throw new GenericeException("Product already present with same name");
         }
         productDao.save(product);
@@ -79,7 +82,11 @@ public class ProductService {
      */
     public Product updateProduct(Product product) {
         Optional<Product> optionalProduct = productDao.findById(product.getId());
-        Product updatedProduct = optionalProduct.orElseThrow(() -> new ProductNotFoundException("No product found with this id"));
+        if(optionalProduct.isEmpty()){
+            logger.error("product not found");
+            throw new ProductNotFoundException("Product not found");
+        }
+        Product updatedProduct = optionalProduct.get();
         updatedProduct.setProductName(product.getProductName());
         updatedProduct.setProductPrice(product.getProductPrice());
         productDao.save(updatedProduct);
@@ -96,6 +103,7 @@ public class ProductService {
      */
     public String deleteProduct(Long id) {
         if (!productDao.existsById(id)) {
+            logger.warn("No product exists with this id");
             throw new ProductNotFoundException("Product not found with this id");
         }
         productDao.deleteById(id);

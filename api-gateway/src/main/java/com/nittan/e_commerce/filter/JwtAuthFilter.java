@@ -51,6 +51,7 @@ public class JwtAuthFilter extends AbstractGatewayFilterFactory<JwtAuthFilter.Co
                     logger.error("missing authorization header");
                     throw new InvalidTokenException("Missing authorization header");
                 }
+
                 String authHeader = exchange.getRequest().getHeaders().get(HttpHeaders.AUTHORIZATION).get(0);
                 logger.info("Got authorization header");
                 // Extract token from Authorization header

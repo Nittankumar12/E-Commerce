@@ -21,6 +21,7 @@ public class AuthController {
      */
     @PostMapping("/register")
     public String addUser(@RequestBody UserCredential user){
+
         return authService.saveUser(user);
     }
 
@@ -53,7 +54,6 @@ public class AuthController {
      */
     @GetMapping("/getUserByEmail")
     public ResponseEntity<?> getUserByEmail(@RequestParam("email") String email){
-        System.out.println("in controller");
         return authService.getUserByEmail(email);
     }
 

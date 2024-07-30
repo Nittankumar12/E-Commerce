@@ -97,7 +97,7 @@ public class AuthService {
      * get user by email
      * @param email of the user
      */
-    public ResponseEntity<?> getUserByEmail(String email) {
+    public ResponseEntity<?>  getUserByEmail(String email) {
         UserCredential userCredential;
         try{
             userCredential = repository.findByEmail(email);
@@ -117,7 +117,6 @@ public class AuthService {
      * @param id of the user
      */
     public ResponseEntity<?> getUserById(int id) {
-        System.out.println("in service ");
         Optional<UserCredential> userCredential;
         try{
             userCredential = repository.findById(id);

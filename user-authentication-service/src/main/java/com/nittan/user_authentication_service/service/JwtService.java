@@ -24,7 +24,7 @@ public class JwtService {
      * Validate a JWT token.
      * @param token The JWT token to validate
      */
-    public void validateToken(final String token){
+    public void  validateToken(final String token){
         Jwts.parserBuilder().setSigningKey(getSigningKey()).build().parseClaimsJws(token);
     }
 

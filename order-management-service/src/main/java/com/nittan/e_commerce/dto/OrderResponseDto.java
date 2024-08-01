@@ -1,7 +1,6 @@
 package com.nittan.e_commerce.dto;
 
 import com.nittan.e_commerce.entity.Product;
-import com.nittan.e_commerce.entity.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

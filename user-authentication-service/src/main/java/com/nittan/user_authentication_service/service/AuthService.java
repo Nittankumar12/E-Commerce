@@ -7,7 +7,6 @@ import com.nittan.user_authentication_service.exception.GenericException;
 import com.nittan.user_authentication_service.exception.InvalidTokenException;
 import com.nittan.user_authentication_service.exception.InvalidUserException;
 import com.nittan.user_authentication_service.repository.UserRepository;
-import org.hibernate.boot.model.process.internal.UserTypeResolution;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,7 +67,7 @@ public class AuthService {
     public String generateToken(UserAuthRequest user){
         try {
             // Authenticate user credentials
-            Authentication authenticate = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getName(), user.getPassword()));
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getName(), user.getPassword()));
             // Generate and return JWT token
             logger.info("user authentication done & generating token");
             return jwtService.generateToken(user.getName());
@@ -97,7 +96,7 @@ public class AuthService {
      * get user by email
      * @param email of the user
      */
-    public ResponseEntity<?>  getUserByEmail(String email) {
+    public ResponseEntity<UserResponseDto>  getUserByEmail(String email) {
         UserCredential userCredential;
         try{
             userCredential = repository.findByEmail(email);
@@ -116,7 +115,7 @@ public class AuthService {
      * get user by id
      * @param id of the user
      */
-    public ResponseEntity<?> getUserById(int id) {
+    public ResponseEntity<UserResponseDto> getUserById(int id) {
         Optional<UserCredential> userCredential;
         try{
             userCredential = repository.findById(id);

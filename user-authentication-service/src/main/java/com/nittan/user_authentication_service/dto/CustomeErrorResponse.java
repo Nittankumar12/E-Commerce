@@ -14,7 +14,7 @@ import org.springframework.http.HttpStatus;
 @Builder
 @AllArgsConstructor
 public class CustomeErrorResponse {
-    private HttpStatus httpStatus;  // HTTP status code associated with the error
-    private String errorMessage;    // Error message describing the issue
-    private String errorCode;       // Error code for categorizing the error
+    HttpStatus httpStatus;  // HTTP status code associated with the error
+    String errorMessage;    // Error message describing the issue
+    String errorCode;       // Error code for categorizing the error
 }

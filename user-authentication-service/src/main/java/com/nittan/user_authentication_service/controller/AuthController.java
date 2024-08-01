@@ -1,6 +1,7 @@
 package com.nittan.user_authentication_service.controller;
 
 import com.nittan.user_authentication_service.dto.UserAuthRequest;
+import com.nittan.user_authentication_service.dto.UserResponseDto;
 import com.nittan.user_authentication_service.entity.UserCredential;
 import com.nittan.user_authentication_service.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,14 +54,13 @@ public class AuthController {
      * @return UserResponseDto object
      */
     @GetMapping("/getUserByEmail")
-    public ResponseEntity<?> getUserByEmail(@RequestParam("email") String email){
+    public ResponseEntity<UserResponseDto> getUserByEmail(@RequestParam("email") String email){
         return authService.getUserByEmail(email);
     }
 
 
     @GetMapping("/getUserById")
-    public ResponseEntity<?> getUserById(@RequestParam("id") Integer id){
-        System.out.println("in controller");
+    public ResponseEntity<UserResponseDto> getUserById(@RequestParam("id") Integer id){
         return authService.getUserById(id);
     }
 }

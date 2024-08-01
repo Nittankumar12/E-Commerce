@@ -7,6 +7,8 @@ import com.nittan.e_commerce.exception.OrderNotFoundException;
 import com.nittan.e_commerce.service.OrderService;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.github.resilience4j.retry.annotation.Retry;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +28,7 @@ public class OrderController {
     private OrderService orderService;
     private int attempt = 1;
 
+    Logger logger = LoggerFactory.getLogger(OrderController.class);
     /**
      * Endpoint to create a new order.
      *
@@ -94,7 +97,8 @@ public class OrderController {
     @CircuitBreaker(name = "orderService", fallbackMethod = "getAllDemoProducts")
     @Retry(name = "orderService", fallbackMethod = "getAllDemoProducts")
     public List<Product> getAllProducts() {
-        System.out.println("Retry method called: " + attempt++ + " times at " + new Date());
+        String message = String.format("Retry method called: %s times at %s ",attempt++,new Date());
+        logger.info(message);
         return orderService.getAllProducts();
     }
 

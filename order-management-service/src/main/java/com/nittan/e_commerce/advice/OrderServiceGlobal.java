@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
  */
 @RestControllerAdvice
 @Slf4j
-public class OrderServiceGlobalException {
+public class OrderServiceGlobal {
 
     /**
      * Exception handler for OrderNotFoundException.
@@ -24,7 +24,7 @@ public class OrderServiceGlobalException {
      * @return ResponseEntity with error details.
      */
     @ExceptionHandler(OrderNotFoundException.class)
-    public ResponseEntity<?> handleOrderNotFoundException(OrderNotFoundException exception){
+    public ResponseEntity<CustomeErrorResponse> handleOrderNotFoundException(OrderNotFoundException exception){
         CustomeErrorResponse errorResponse = CustomeErrorResponse.builder()
                 .httpStatus(HttpStatus.NOT_FOUND)
                 .errorCode(GlobalErrorCode.ERROR_ORDER_NOT_FOUND)
@@ -40,7 +40,7 @@ public class OrderServiceGlobalException {
      * @return ResponseEntity with error details.
      */
     @ExceptionHandler(GenericeException.class)
-    public ResponseEntity<?> handleGenericException(Exception exception){
+    public ResponseEntity<CustomeErrorResponse> handleGenericException(Exception exception){
         CustomeErrorResponse errorResponse = CustomeErrorResponse.builder()
                 .httpStatus(HttpStatus.INTERNAL_SERVER_ERROR)
                 .errorCode(GlobalErrorCode.GENERIC_ERROR)
@@ -56,7 +56,7 @@ public class OrderServiceGlobalException {
      * @return ResponseEntity with error details.
      */
     @ExceptionHandler(ProductServiceException.class)
-    public ResponseEntity<?> handleProductsNotFoundException(ProductServiceException exception){
+    public ResponseEntity<CustomeErrorResponse> handleProductsNotFoundException(ProductServiceException exception){
         CustomeErrorResponse errorResponse = CustomeErrorResponse.builder()
                 .httpStatus(HttpStatus.INTERNAL_SERVER_ERROR)
                 .errorCode(GlobalErrorCode.PRODUCTS_NOT_FOUND)

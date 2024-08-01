@@ -1,6 +1,5 @@
 package com.nittan.e_commerce.filter;
 
-import com.nittan.e_commerce.exception.GenericException;
 import com.nittan.e_commerce.exception.InvalidTokenException;
 import com.nittan.e_commerce.exception.InvalidUserException;
 import com.nittan.e_commerce.util.JwtUtil;

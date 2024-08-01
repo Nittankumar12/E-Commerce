@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
  */
 @RestControllerAdvice
 @Slf4j
-public class ProductServiceGlobalException {
+public class ProductServiceGlobal {
 
     /**
      * Exception handler for ProductNotFoundException.
@@ -24,7 +24,7 @@ public class ProductServiceGlobalException {
      * @return ResponseEntity containing error response.
      */
     @ExceptionHandler(ProductNotFoundException.class)
-    public ResponseEntity<?> handleProductNotFoundException(ProductNotFoundException exception){
+    public ResponseEntity<CustomeErrorResponse> handleProductNotFoundException(ProductNotFoundException exception){
         CustomeErrorResponse errorResponse = CustomeErrorResponse.builder()
                 .httpStatus(HttpStatus.INTERNAL_SERVER_ERROR)
                 .errorCode(GlobalErrorCode.ERROR_ORDER_NOT_FOUND)
@@ -41,7 +41,7 @@ public class ProductServiceGlobalException {
      * @return ResponseEntity containing error response.
      */
     @ExceptionHandler(GenericeException.class)
-    public ResponseEntity<?> handleGenericException(Exception exception){
+    public ResponseEntity<CustomeErrorResponse> handleGenericException(Exception exception){
         CustomeErrorResponse errorResponse = CustomeErrorResponse.builder()
                 .httpStatus(HttpStatus.INTERNAL_SERVER_ERROR)
                 .errorCode(GlobalErrorCode.GENERIC_ERROR)

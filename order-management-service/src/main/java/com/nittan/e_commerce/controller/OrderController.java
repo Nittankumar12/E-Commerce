@@ -24,11 +24,17 @@ import java.util.List;
 @RequestMapping("order")
 public class OrderController {
 
-    @Autowired
-    private OrderService orderService;
+    private final OrderService orderService;
+
     private int attempt = 1;
 
     Logger logger = LoggerFactory.getLogger(OrderController.class);
+
+    @Autowired
+    public OrderController(OrderService orderService) {
+        this.orderService = orderService;
+    }
+
     /**
      * Endpoint to create a new order.
      *

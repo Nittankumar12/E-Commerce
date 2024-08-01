@@ -2,10 +2,7 @@ package com.nittan.e_commerce.controller;
 
 import com.nittan.e_commerce.entity.Product;
 import com.nittan.e_commerce.service.ProductService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,13 +16,14 @@ import java.util.List;
 @RequestMapping("product")
 public class ProductController {
 
-    @Autowired
-    ProductService productService;
+    private final ProductService productService;
 
     @Autowired
-    Environment environment;
+    public ProductController(ProductService productService){
+        this.productService = productService;
+    }
 
-    Logger logger  = LoggerFactory.getLogger(ProductService.class);
+
     /**
      * Endpoint to retrieve all products.
      *
@@ -89,9 +87,7 @@ public class ProductController {
      */
     @PostMapping("getProductsForOrder")
     public ResponseEntity<List<Product>> getProductsForOrder(@RequestBody List<Long> productIds){
-        logger.info(environment.getProperty("local.server.port"));
         List<Product> products = productService.getProductsForOrder(productIds);
-        if(products == null) return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 }

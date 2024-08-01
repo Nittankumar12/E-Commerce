@@ -55,16 +55,3 @@ public class JwtService {
         return Keys.hmacShaKeyFor(keyBytes);
     }
 }
-
-
-//    private static final int secret_length = 64;
-//    public static final String  SECRET = generateSecret();
-//
-//    private static String generateSecret() {
-//        SecureRandom random = new SecureRandom();
-//        byte[] bytes = new byte[secret_length];
-//        random.nextBytes(bytes);
-//        String secret =  Base64.getUrlEncoder().encodeToString(bytes);
-//        System.out.println(secret);
-//        return secret;
-//    }

@@ -1,7 +1,6 @@
 package com.nittan.e_commerce.entity;
 
 import jakarta.persistence.*;
-//import lombok.Data;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;

@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 @Slf4j
-public class UserAuthServiceGlobalException {
+public class UserAuthServiceGlobal {
     /**
      * Exception handler for InvalidUserException.
      * Handles Unauthorized (401) status for invalid user scenarios.
@@ -23,7 +23,7 @@ public class UserAuthServiceGlobalException {
      * @return ResponseEntity with a custom error response and HTTP status UNAUTHORIZED
      */
     @ExceptionHandler(InvalidUserException.class)
-    public ResponseEntity<?> handleOrderNotFoundException(InvalidUserException exception){
+    public ResponseEntity<CustomeErrorResponse> handleOrderNotFoundException(InvalidUserException exception){
         // Prepare error response with HTTP status UNAUTHORIZED and specific error code
         CustomeErrorResponse errorResponse = CustomeErrorResponse.builder()
                 .httpStatus(HttpStatus.UNAUTHORIZED)
@@ -46,7 +46,7 @@ public class UserAuthServiceGlobalException {
      * @return ResponseEntity with a custom error response and HTTP status UNAUTHORIZED
      */
     @ExceptionHandler(InvalidTokenException.class)
-    public ResponseEntity<?> handleOrderNotFoundException(InvalidTokenException exception){
+    public ResponseEntity<CustomeErrorResponse> handleOrderNotFoundException(InvalidTokenException exception){
         // Prepare error response with HTTP status UNAUTHORIZED and specific error code
         CustomeErrorResponse errorResponse = CustomeErrorResponse.builder()
                 .httpStatus(HttpStatus.UNAUTHORIZED)
@@ -69,7 +69,7 @@ public class UserAuthServiceGlobalException {
      * @return ResponseEntity with a custom error response and HTTP status INTERNAL_SERVER_ERROR
      */
     @ExceptionHandler(GenericException.class)
-    public ResponseEntity<?> handleOrderNotFoundException(GenericException exception){
+    public ResponseEntity<CustomeErrorResponse> handleOrderNotFoundException(GenericException exception){
         // Prepare error response with HTTP status INTERNAL_SERVER_ERROR and generic error code
         CustomeErrorResponse errorResponse = CustomeErrorResponse.builder()
                 .httpStatus(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -92,7 +92,7 @@ public class UserAuthServiceGlobalException {
      * @return ResponseEntity with a custom error response and HTTP status NOt_FOUND
      */
     @ExceptionHandler(UsernameNotFoundException.class)
-    public ResponseEntity<?> handleUsernameNotFoundException(UsernameNotFoundException exception){
+    public ResponseEntity<CustomeErrorResponse> handleUsernameNotFoundException(UsernameNotFoundException exception){
         // Prepare error response with HTTP status INTERNAL_SERVER_ERROR and generic error code
         CustomeErrorResponse errorResponse = CustomeErrorResponse.builder()
                 .httpStatus(HttpStatus.NOT_FOUND)

@@ -7,6 +7,6 @@ import lombok.Data;
  */
 @Data
 public class UserAuthRequest {
-    private String name;     // Username or identifier for authentication
-    private String password; // Password associated with the username
+     String name;     // Username or identifier for authentication
+     String password; // Password associated with the username
 }

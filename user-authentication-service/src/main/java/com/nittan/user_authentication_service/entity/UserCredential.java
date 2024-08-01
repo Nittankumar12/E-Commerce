@@ -19,8 +19,8 @@ public class UserCredential {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;           // Unique identifier for the user
-    private String name;      // User's name or username
-    private String email;     // User's email address
-    private String password;  // User's password
+     int id;           // Unique identifier for the user
+     String name;      // User's name or username
+     String email;     // User's email address
+     String password;  // User's password
 }

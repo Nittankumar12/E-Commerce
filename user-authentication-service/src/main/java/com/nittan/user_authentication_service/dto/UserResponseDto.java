@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserResponseDto {
-    private int id;
-    private String name;
-    private String email;
+     int id;
+     String name;
+     String email;
 }

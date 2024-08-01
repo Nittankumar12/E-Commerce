@@ -1,6 +1,5 @@
 package com.nittan.e_commerce.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.nittan.e_commerce.entity.Product;
 import com.nittan.e_commerce.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;

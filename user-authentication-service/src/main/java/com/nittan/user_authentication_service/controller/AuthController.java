@@ -4,7 +4,6 @@ import com.nittan.user_authentication_service.dto.UserAuthRequest;
 import com.nittan.user_authentication_service.dto.UserResponseDto;
 import com.nittan.user_authentication_service.entity.UserCredential;
 import com.nittan.user_authentication_service.service.AuthService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,8 +11,12 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/auth")
 public class AuthController {
 
-    @Autowired
-    AuthService authService;
+
+    private final AuthService authService;
+
+    public AuthController(AuthService authService) {
+        this.authService = authService;
+    }
 
     /**
      * Endpoint to register a new user.

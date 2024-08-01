@@ -18,11 +18,15 @@ import java.util.Optional;
 @Service
 public class ProductService {
 
+    private final ProductDao productDao;
+
     @Autowired
-    private ProductDao productDao;
+    public ProductService(ProductDao productDao){
+        this.productDao = productDao;
+    }
 
     private final Logger logger = LoggerFactory.getLogger(ProductService.class);
-
+    String noProductsFound = "No Products found";
     /**
      * Retrieves all products from the database.
      *
@@ -32,10 +36,11 @@ public class ProductService {
     public List<Product> getAllProducts() {
         List<Product> products = productDao.findAll();
         if (products.isEmpty()) {
-            logger.warn("No productss found");
-            throw new ProductNotFoundException("No products found");
+            logger.warn(noProductsFound);
+            throw new ProductNotFoundException(noProductsFound);
         }
-        logger.info("Retrieved %s products ",products.size());
+        String message = String.format("Retreived %s products",products.size());
+        logger.info(message);
         return products;
     }
 
@@ -127,14 +132,15 @@ public class ProductService {
             throw new ProductNotFoundException("Products not found from the given list or wrong product IDs");
         }
         if (products.isEmpty()) {
-            logger.warn("No products found");
-            throw new ProductNotFoundException("No products found");
+            logger.warn(noProductsFound);
+            throw new ProductNotFoundException(noProductsFound);
         }
         if (products.size() < productIds.size()) {
             logger.warn("not all products found");
             throw new ProductNotFoundException("Not all products found");
         }
-        logger.info("Retrieved  %s products ", products.size());
+        String message = String.format("Retreived %s products",products.size());
+        logger.info(message);
         return products;
     }
 }

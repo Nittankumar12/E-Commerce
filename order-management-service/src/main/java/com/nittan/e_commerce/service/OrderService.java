@@ -11,6 +11,7 @@ import com.nittan.e_commerce.entity.User;
 import com.nittan.e_commerce.exception.OrderNotFoundException;
 import com.nittan.e_commerce.exception.ProductServiceException;
 import com.nittan.e_commerce.exception.UserServiceException;
+import feign.FeignException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,7 +78,7 @@ public class OrderService {
             order.setProductIds(orderDto.getProductIds());
             order.setStatus("CREATED");
             order = orderDao.save(order);
-            OrderResponseDto orderResponseDto = getOrderResponseDto(order, user, products);
+            OrderResponseDto orderResponseDto = getOrderResponseDto(order, user, products.getBody());
 
             logger.info("order saved to the repo");
             return orderResponseDto;
@@ -113,7 +114,7 @@ public class OrderService {
 
         assert products != null;
         if (!products.isEmpty()) {
-            OrderResponseDto orderResponseDto = getOrderResponseDto(order, Objects.requireNonNull(user.getBody()), (ResponseEntity<List<Product>>) products);
+            OrderResponseDto orderResponseDto = getOrderResponseDto(order, Objects.requireNonNull(user.getBody()),products);
             String message = String.format(varr,products.size());
             logger.info(message);
             return orderResponseDto;
@@ -168,47 +169,63 @@ public class OrderService {
      * @throws OrderNotFoundException If no orders are found in the database.
      */
     public List<OrderResponseDto> getAllOrders() {
-        List<Order> orders = orderDao.findAll();
-        List<OrderResponseDto> orderResponseList = new ArrayList<>();
-        for (Order order : orders) {
-            List<Product> products = productClient.getProductsForOrder(order.getProductIds()).getBody();
-            User user = null;
-            try{
-                user = userClient.getUserById(order.getUserId()).getBody();
-            }
-            catch(Exception e){
-                logger.error("user not found..");
-                throw new UserServiceException("User not found");
-            }
-            if(user == null) throw new UserServiceException("User not foundd");
+    List<Order> orders = orderDao.findAll();
+    List<OrderResponseDto> orderResponseList = new ArrayList<>();
+    for (Order order : orders) {
+        List<Product> products = null;
+        User user = null;
+        try {
+            products = productClient.getProductsForOrder(order.getProductIds()).getBody();
+        } catch (FeignException e) {
+            logger.error("Failed to fetch products for order ID: " + order.getId(), e);
+            throw new ProductServiceException("Failed to fetch products for order ID: " + order.getId());
+        }catch(Exception e){
+            logger.error("Failed to fetch products with order ID: " + order.getId(),e);
+            throw new ProductServiceException("Failed to fetch products " + order.getId());
+        }
 
-            assert products != null;
-            if (!products.isEmpty()) {
-                OrderResponseDto orderResponseDto = getOrderResponseDto(order, user, (ResponseEntity<List<Product>>) products);
-                String message = String.format(varr,products.size());
-                logger.info(message);
-                orderResponseList.add(orderResponseDto);
-            }
+        try {
+            user = userClient.getUserById(order.getUserId()).getBody();
+        } catch (Exception e) {
+            logger.error("User not found for order id: " + order.getId(), e);
+            throw new UserServiceException("User not found for orderr ID: " + order.getId());
         }
-        if (orderResponseList.isEmpty()) {
-            logger.error("order not found");
-            throw new OrderNotFoundException("No orders found");
+
+        if (user == null) {
+            logger.error("User is null for order ID: " + order.getId());
+            throw new UserServiceException("User not found for order: " + order.getId());
         }
-        logger.info("returning orderlist");
-        return orderResponseList;
+//
+        assert products != null;
+        if (!products.isEmpty()) {
+            OrderResponseDto orderResponseDto = getOrderResponseDto(order, user, products);
+            String message = String.format("Order found with %d products", products.size());
+            logger.info(message);
+            orderResponseList.add(orderResponseDto);
+        }
     }
 
-    private static OrderResponseDto getOrderResponseDto(Order order, User user, ResponseEntity<List<Product>> products) {
-        OrderResponseDto orderResponseDto = new OrderResponseDto();
-        orderResponseDto.setOrderId(order.getId());
-        orderResponseDto.setUserEmail(user.getEmail());
-        orderResponseDto.setUserId(user.getId());
-        orderResponseDto.setStatus(order.getStatus());
-        orderResponseDto.setCreatedAt(order.getCreatedAt());
-        orderResponseDto.setLastModified(order.getLastModified());
-        orderResponseDto.setProducts(products.getBody());
-        return orderResponseDto;
+    if (orderResponseList.isEmpty()) {
+        logger.error("No orders found");
+        throw new OrderNotFoundException("No orders found");
     }
+
+    logger.info("Returning order list");
+    return orderResponseList;
+}
+
+
+    private static OrderResponseDto getOrderResponseDto(Order order, User user, List<Product> products) {
+            OrderResponseDto orderResponseDto = new OrderResponseDto();
+            orderResponseDto.setOrderId(order.getId());
+            orderResponseDto.setUserEmail(user.getEmail());
+            orderResponseDto.setUserId(user.getId());
+            orderResponseDto.setStatus(order.getStatus());
+            orderResponseDto.setCreatedAt(order.getCreatedAt());
+            orderResponseDto.setLastModified(order.getLastModified());
+            orderResponseDto.setProducts(products);
+            return orderResponseDto;
+}
 
     /**
      * Retrieves all products available from the product service.

@@ -32,10 +32,10 @@ public class ProductService {
     public List<Product> getAllProducts() {
         List<Product> products = productDao.findAll();
         if (products.isEmpty()) {
-            logger.warn("No products found");
+            logger.warn("No productss found");
             throw new ProductNotFoundException("No products found");
         }
-        logger.info("Retrieved " + products.size() + " products ");
+        logger.info("Retrieved %s products ",products.size());
         return products;
     }
 
@@ -134,7 +134,7 @@ public class ProductService {
             logger.warn("not all products found");
             throw new ProductNotFoundException("Not all products found");
         }
-        logger.info("Retrieved" + products.size() +" products ");
+        logger.info("Retrieved  %s products ", products.size());
         return products;
     }
 }
